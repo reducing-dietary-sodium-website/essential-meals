@@ -1,4 +1,4 @@
-essential_meals_website/env
+env
 *.DS_Store
 *.pyc
 __pycache__

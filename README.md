@@ -7,6 +7,7 @@ Navigate to the directory
 pip install virtualenv
 virtualenv env
 env\Scripts\activate
+pip install -r requirements.txt
 ```
 This will set up a virtual environment so external python libraries won't mess up stuff here.
 
