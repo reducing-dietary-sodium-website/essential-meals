@@ -6,7 +6,7 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<style>
 				body {font-family: Arial, Helvetica, sans-serif;}
-				form {border: 3px solid #f1f1f1;}
+				form {border: 3px solid #ffffff;}
 
 				input[type=text], input[type=password] {
 				  width: 100%;
@@ -71,27 +71,26 @@
 
 		<body>
 
-		<h2>Login</h2>
-
 		<div class="imgcontainer">
 
 		</div>
 
 		<div class="container">
-			<label for="uname"><b>Username</b></label>
-			<!-- <input type="text" placeholder="Enter Username" name="uname" required> -->
-			<input type="text" placeholder="Enter Username" name="uname">
-
-			<label for="psw"><b>Password</b></label>
-			<input type="password" placeholder="Enter Password" name="psw">
+			<h2>Login</h2>
+			<form method="post">
+			  	{% csrf_token %}
+			  	{{ form.as_p }}
+			  	<button type="submit">Login</button>
+			</form>
+			
 			    
-			<a href="../home">
+<!-- 			<a href="../home">
 				<button type="submit">Login</button>	
 			</a>
-			
-			<label>
+			 -->
+<!-- 			<label>
 				<input type="checkbox" checked="checked" name="remember"> Remember me
-			</label>
+			</label> -->
 		</div>
 
 		<div class="container">
@@ -99,6 +98,8 @@
 			<span class="psw">Forgot <a href="#">password?</a></span>
 		</div>
 
+
+		
 		</body>
 
 	</html>

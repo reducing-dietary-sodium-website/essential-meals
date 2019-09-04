@@ -124,5 +124,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-
+LOGIN_REDIRECT_URL = '/em_website/home/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
