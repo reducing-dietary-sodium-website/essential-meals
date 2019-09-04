@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+
+	{% if title %}
+		<title>ESSENTIAL MEAL - {{ title }}</title>
+	{% else %}
+		<title>ESSENTIAL MEAL</title>
+	{% endif %}
+</head>
+<body>
+	{% block content %}{% endblock %}
+
+</body>
+</html>
