@@ -13,3 +13,6 @@ def login(request):
 
 def home(request):
 	return render(request, "home.html", {'title': 'Home'})
+
+def main(request):
+	return redirect("accounts/login")
