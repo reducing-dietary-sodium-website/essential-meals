@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewTopicForm
 from .models import Board, Topic, Post
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -15,6 +15,9 @@ def index(request):
 def hello(request):
 	return render(request, "helloworld.html")
 
+def profile(request):
+    return render(request, "profile.html", {'title': 'Profile'})
+
 def login(request):
 	return render(request, "Registration/login.html", {'title': 'Login'})
 
@@ -23,6 +26,10 @@ class SignUp(generic.CreateView):
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
 
+# class Profile(generic.CreateView):
+#     form_class = UserChangeForm
+#     success_url = reverse_lazy('login')
+#     template_name = 'profile.html'
 # def register(request):
 #     return render(request, "Registration/registration.html", {'title': 'Register'})
 
