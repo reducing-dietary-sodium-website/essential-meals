@@ -21,6 +21,12 @@ def profile(request):
 def login(request):
 	return render(request, "Registration/login.html", {'title': 'Login'})
 
+def password_reset(request):
+    return render(request, "Registration/password_reset.html", {'title': 'Password Reset'})
+
+def password_reset_done(request):
+    return render(request, "Registration/password_reset_done.html", {'title': 'Password Reset Done'})
+
 class SignUp(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
