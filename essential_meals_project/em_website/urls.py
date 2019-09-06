@@ -9,8 +9,14 @@ urlpatterns = [
     path('hello/', views.hello, name='helloworld'),
     # path('login/', views.login, name='em_login'),
     path('home/', views.home, name='em_home'),
+    path('signup/', views.SignUp.as_view(), name='signup'),
     path('env/', include('django.contrib.auth.urls')),
     re_path('boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
     re_path('boards/(?P<pk>\d+)/new$', views.new_topic, name='new_topic'),
     re_path(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
+<<<<<<< HEAD
     ]
+||||||| merged common ancestors
+=======
+]
+>>>>>>> c00e2232f39b5ad1d13ff0f328bc2d03a503355f
