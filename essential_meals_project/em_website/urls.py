@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('hello/', views.hello, name='helloworld'),
-    path('login/', views.login, name='em_login'),
+    # path('login/', views.login, name='em_login'),
     path('home/', views.home, name='em_home'),
     path('env/', include('django.contrib.auth.urls')),
     re_path('boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
