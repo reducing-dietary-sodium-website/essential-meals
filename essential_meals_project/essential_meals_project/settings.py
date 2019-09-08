@@ -61,7 +61,9 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(SETTINGS_PATH, 'essential_meals_project', 'templates'),
-                 os.path.join(SETTINGS_PATH, 'em_website', 'templates')],
+                 os.path.join(SETTINGS_PATH, 'em_website', 'templates'),
+                 os.path.join(BASE_DIR, 'templates')],
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,7 +78,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'essential_meals_project.wsgi.application'
 
-
+# AUTH_USER_MODEL = 'users.CustomUser'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -87,7 +89,8 @@ DATABASES = {
     }
 }
 
-
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 

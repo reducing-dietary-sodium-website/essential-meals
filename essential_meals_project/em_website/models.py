@@ -26,3 +26,6 @@ class Post(models.Model):
     updated_at = models.DateTimeField(null=True)
     created_by = models.ForeignKey(User,on_delete = models.CASCADE, related_name='posts')
     updated_by = models.ForeignKey(User,on_delete = models.CASCADE, null=True, related_name='+')
+
+# class CustomUser(AbstractUser):
+#     pass
