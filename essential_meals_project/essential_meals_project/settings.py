@@ -78,7 +78,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'essential_meals_project.wsgi.application'
 
-# AUTH_USER_MODEL = 'users.CustomUser'
+# AUTH_USER_MODEL = 'em_website.User'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 

@@ -1,5 +1,7 @@
 from django import forms
 from .models import Topic
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserChangeForm
 
 class NewTopicForm(forms.ModelForm):
     message = forms.CharField(
@@ -11,3 +13,15 @@ class NewTopicForm(forms.ModelForm):
     class Meta:
         model = Topic
         fields = ['subject', 'message']
+
+
+class EditProfileForm(UserChangeForm):
+
+	class Meta:
+		model = User
+		fields = [
+			'email',
+			'first_name',
+			'last_name',
+			'password',
+			]
