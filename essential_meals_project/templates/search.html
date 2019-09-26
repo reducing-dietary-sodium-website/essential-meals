@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block breadcrumb %}
+	<li class="breadcrumb-item active">Boards</li>
+{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		input[type=text] {
+            width: 50%;
+            padding: 8px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .search_Btn {
+        	background-color: #4CAF50;
+			width: auto;
+			opacity: 0.8;
+        	border: none;
+			cursor: pointer;
+			padding: 14px 20px;
+			margin: 8px 0;
+			color: white;
+        }
+        button:hover {
+          	
+        }
+        .container {
+			padding: 16px;
+		}
+	</style>
+</head>
+
+<body>
+	{% if user.is_authenticated %}
+	    <h3>Search for a recipe</h3>
+
+	    <div class="container">
+	    <form action="/action_page.php">
+			<input type="text" name="search">
+			<button class="search_Btn">Search</button>
+			<p>Sodium Limit Per Serving (mg): <input type="number" name="calories"></p>
+			<p>Gluten Free: <input type="checkbox" name="gluten">    
+			Vegetarian:  <input type="checkbox" name="vegetarian"></p>
+		</form>
+		</div>
+
+		<!-- TODO: Put all recipes even before searching. -->
+		<!-- TODO: Add some filter menus -->
+
+	    <form action="{% url 'logout' %}">
+	        <button type="submit" class="logout_Btn">Logout</button>
+	    </form>
+	{% else %}
+	    <h3>You are not logged in</h3>
+	    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
+	{% endif %}
+</body>
+
+</html>
+
+{% endblock %}
