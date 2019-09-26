@@ -17,5 +17,9 @@ urlpatterns = [
     path('env/', include('django.contrib.auth.urls')),
     re_path('boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
     re_path('boards/(?P<pk>\d+)/new$', views.new_topic, name='new_topic'),
+    #path('recipes/',views.detail,name = 'detail'),
     re_path(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
+    #re_path(r'boards/(?P<pk>\d+)/category/(?P<slug>\d+)/details$',views.detail, name = 'detail'),
+    #re_path('boards/(?P<slug>\d+)/category/recipes$',views.index2, name = 'index2'),
+    re_path(r'^recipes/(?P<slug>[-\w]+)/$',views.detail, name = 'details'),
 ]
