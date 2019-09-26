@@ -1,8 +1,7 @@
-
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import NewTopicForm
+from .forms import NewTopicForm, EditProfileForm
 from .models import Board, Topic, Post
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
@@ -16,7 +15,15 @@ def hello(request):
 	return render(request, "helloworld.html")
 
 def profile(request):
-    return render(request, "profile.html", {'title': 'Profile'})
+	if request.method == 'POST':
+		form = EditProfileForm(request.POST, instance=request.user)
+		if form.is_valid():
+			form.save()
+			return redirect('../home')
+	else:
+		form = EditProfileForm(instance=request.user)
+		args = {'form': form}
+		return render(request, 'profile.html', args)
 
 def login(request):
 	return render(request, "Registration/login.html", {'title': 'Login'})
