@@ -43,8 +43,9 @@ class SignUp(generic.CreateView):
 #     form_class = UserChangeForm
 #     success_url = reverse_lazy('login')
 #     template_name = 'profile.html'
-# def register(request):
-#     return render(request, "Registration/registration.html", {'title': 'Register'})
+    
+def register(request):
+    return render(request, "Registration/registration.html", {'title': 'Register'})
 
 def home(request):
 	boards = Board.objects.all()
@@ -74,3 +75,5 @@ def topic_posts(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
     return render(request, 'topic_posts.html', {'topic': topic})
 
+def search(request):
+    return render(request, "search.html", {'title': 'Search'})
