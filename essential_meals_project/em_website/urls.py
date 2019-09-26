@@ -16,6 +16,7 @@ urlpatterns = [
     path('signup/', views.SignUp.as_view(), name='signup'),
     path('env/', include('django.contrib.auth.urls')),
     path('search/', views.search, name='em_search'),
+    path('results/', views.results, name='em_results'),
     re_path('boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
     re_path('boards/(?P<pk>\d+)/new$', views.new_topic, name='new_topic'),
     re_path(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
