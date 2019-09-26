@@ -120,7 +120,7 @@ def results(request):
     lists = {}
     for recipe in recipes:
         recipe = recipe['recipe']
-        lists[str(recipe['label'])] = str(recipe['url'])
-    print(lists)
+        lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
+    #print(lists)
     return render(request, "results.html", {'title': 'Results',
         'recipes': lists})

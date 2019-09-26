@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block breadcrumb %}
-    <li class="breadcrumb-item active">Boards</li>
+    <li class="breadcrumb-item active"><a href='../search'>Back to search</a></li>
 {% endblock %}
 
 {% block content %}
@@ -33,6 +33,10 @@
         .container {
             padding: 16px;
         }
+        li {
+            padding: 12px;
+            list-style-type: none;
+        }
     </style>
 </head>
 
@@ -42,9 +46,9 @@
 
     <ul>
         {% for key, value in recipes.items %}
-            <li> {{ key }} <a href = {{value}}>{{ value }}</a> </li>
+            <a href = {{ value.0 }}><li> <img src={{ value.1 }} height=50dp width=50dp> {{ key }} </li></a>
         {% endfor %}
-    </ul
+    </ul>
 
 
     {% else %}
