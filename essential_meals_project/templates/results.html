@@ -36,6 +36,15 @@
         li {
             padding: 12px;
             list-style-type: none;
+            background-color: #DCDCDC;
+        }
+        li:hover {
+            padding: 12px;
+            background-color: #D0D0D0;
+            text-decoration: none;
+        }
+        a:hover, a:link, a:visited {
+            text-decoration: none;
         }
     </style>
 </head>
@@ -46,7 +55,7 @@
 
     <ul>
         {% for key, value in recipes.items %}
-            <a href = {{ value.0 }}><li> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
+            <a class="recipe" href = {{ value.0 }}><li> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
         {% endfor %}
     </ul>
 
