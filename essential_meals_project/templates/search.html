@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block breadcrumb %}
 	<li class="breadcrumb-item active">Boards</li>
 {% endblock %}
@@ -38,12 +38,15 @@
 
 <body>
 	{% if user.is_authenticated %}
-	    <h3>RECIPE YOU WANT...</h3>
+	    <h3>Search for a recipe</h3>
 
 	    <div class="container">
 	    <form action="/action_page.php">
-			<input type="text" name="button">
-			<button class="search_Btn">Search</button><br>
+			<input type="text" name="search">
+			<button class="search_Btn">Search</button>
+			<p>Sodium Limit Per Serving (mg): <input type="number" name="calories"></p>
+			<p>Gluten Free: <input type="checkbox" name="gluten">    
+			Vegetarian:  <input type="checkbox" name="vegetarian"></p>
 		</form>
 		</div>
 
