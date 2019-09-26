@@ -40,7 +40,7 @@
         .imgcontainer {
             text-align: center;
             margin: 24px 0 12px 0;
-        }   {% if user.is_authenticated %}
+        }
         /*img.avatar {
                 width: 40%;
                 border-radius: 50%;
@@ -85,6 +85,7 @@
         <h3>You are not logged in</h3>
         <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
     {% endif %}
+
 </body>
 
 </html>

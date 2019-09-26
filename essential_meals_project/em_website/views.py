@@ -9,7 +9,9 @@ from django.urls import reverse_lazy
 from django.views import generic
 import requests
 import json
-
+from django.template import Context, loader
+from .models import Recipe
+from django.http import Http404
 
 # Create your views here.
 def index(request):
@@ -78,6 +80,22 @@ def board_topics(request, pk):
 def topic_posts(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
     return render(request, 'topic_posts.html', {'topic': topic})
+def index2(request,pk):
+    recipes = Recipe.objects.all()
+    t = loader.get_template('/index2.html')
+    c = Context({'object_list': recipes})
+    return HttpResponse(t.render(c))
+def detail(request,slug):
+    recipe = get_object_or_404(Recipe,slug = slug)
+    return render(request,'detail.html',{'object':recipe})
+    #recipe = get_object_or_404(Recipe,board_pk = pk,pk = recipes_pk )
+    # try:
+    #     recipe = Recipe.objects.get(slug=slug)
+    # except Recipe.DoesNotExist:
+    #     raise Http404
+    # t = loader.get_template('/detail.html')
+    # c = Context({'object': recipe})
+    # return HttpResponse(t.render(c))
 
 def search(request):
     return render(request, "search.html", {'title': 'Search'})
