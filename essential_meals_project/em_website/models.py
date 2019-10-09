@@ -84,4 +84,3 @@ class Recipe(models.Model):
             self.date_created = now()
         self.date_updated = now()
         super(Recipe, self).save(*args, **kwargs)
-    

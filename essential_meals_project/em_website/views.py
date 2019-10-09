@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewTopicForm, EditProfileForm
@@ -6,6 +7,8 @@ from .models import Board, Topic, Post
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 from django.views import generic
+import requests
+import json
 from django.template import Context, loader
 from .models import Recipe
 from django.http import Http404
@@ -46,7 +49,7 @@ class SignUp(generic.CreateView):
 #     form_class = UserChangeForm
 #     success_url = reverse_lazy('login')
 #     template_name = 'profile.html'
-    
+
 def register(request):
     return render(request, "Registration/registration.html", {'title': 'Register'})
 
@@ -96,3 +99,28 @@ def detail(request,slug):
 
 def search(request):
     return render(request, "search.html", {'title': 'Search'})
+
+def results(request):
+    querystr = request.META['QUERY_STRING']
+    query = QueryDict(querystr)
+    appID = 'd2952d1f'
+    appKey = '9fda606325713a5d6aff3d0541d6c025'
+    # with open('config.json', 'r') as fh:
+    #     config = json.load(fh)
+    #     appID = config['appID']
+    #     appKey = config['appKEY']
+    task = "https://api.edamam.com/search?q={}&app_id=${}&app_key=${}&from=0&to=10&calories=591-722&nutrients[NA]=0-{}"
+    task = task.format(query['search'], appID, appKey, query['sodium'])
+    if 'vegetarian' in query:
+        task = task + '&health=vegetarian'
+    if 'gluten' is query:
+        task = task + '&health=gluten-free'
+    response = requests.get(task)
+    recipes = response.json()['hits']
+    lists = {}
+    for recipe in recipes:
+        recipe = recipe['recipe']
+        lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
+    #print(lists)
+    return render(request, "results.html", {'title': 'Results',
+        'recipes': lists})
