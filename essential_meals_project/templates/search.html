@@ -28,7 +28,7 @@
 			color: white;
         }
         button:hover {
-          	
+
         }
         .container {
 			padding: 16px;
@@ -41,11 +41,11 @@
 	    <h3>Search for a recipe</h3>
 
 	    <div class="container">
-	    <form action="/action_page.php">
+	    <form action="{% url 'em_results' %}">
 			<input type="text" name="search">
 			<button class="search_Btn">Search</button>
-			<p>Sodium Limit Per Serving (mg): <input type="number" name="calories"></p>
-			<p>Gluten Free: <input type="checkbox" name="gluten">    
+			<p>Sodium Limit Per Serving (mg): <input type="number" name="sodium"></p>
+			<p>Gluten Free: <input type="checkbox" name="gluten">
 			Vegetarian:  <input type="checkbox" name="vegetarian"></p>
 		</form>
 		</div>

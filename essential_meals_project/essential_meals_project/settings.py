@@ -62,7 +62,9 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(SETTINGS_PATH, 'essential_meals_project', 'templates'),
                  os.path.join(SETTINGS_PATH, 'em_website', 'templates'),
-                 os.path.join(BASE_DIR, 'templates')],
+                 os.path.join(BASE_DIR, 'templates'),
+                 'templates'],
+                 
 
         'APP_DIRS': True,
         'OPTIONS': {
@@ -88,6 +90,8 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item active"><a href='../search'>Back to search</a></li>
+{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        input[type=text] {
+            width: 50%;
+            padding: 8px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .search_Btn {
+            background-color: #4CAF50;
+            width: auto;
+            opacity: 0.8;
+            border: none;
+            cursor: pointer;
+            padding: 14px 20px;
+            margin: 8px 0;
+            color: white;
+        }
+        button:hover {
+
+        }
+        .container {
+            padding: 16px;
+        }
+        li {
+            padding: 12px;
+            list-style-type: none;
+            background-color: #DCDCDC;
+        }
+        li:hover {
+            padding: 12px;
+            background-color: #D0D0D0;
+            text-decoration: none;
+        }
+        a:hover, a:link, a:visited {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    {% if user.is_authenticated %}
+        <h3>Search Results</h3>
+
+    <ul>
+        {% for key, value in recipes.items %}
+            <a class="recipe" href = {{ value.0 }}><li> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
+        {% endfor %}
+    </ul>
+
+
+    {% else %}
+        <h3>You are not logged in</h3>
+        <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
+    {% endif %}
+</body>
+
+</html>
+
+{% endblock %}
