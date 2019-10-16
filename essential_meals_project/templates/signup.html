@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block Hamburger_Menu_Content %}
+  <a class="dropdown-item" href="http://localhost:8000/em_website/signup/">Sign up</a>
+  <a class="dropdown-item" href="http://localhost:8000/em_website/password_reset/">Forgot Password</a>
+{% endblock %}
+
 {% block breadcrumb %}
   <li class="breadcrumb-item active">Welcome to Essential Meals</li>
 {% endblock %}

@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 
-
+{% if user.is_authenticated %}
+  {% block navbar_Content %}
+    <a class="navbar-brand"  href="http://localhost:8000/em_website/search/">Search</a>
+    <a class="navbar-brand"  href="#">Calendar</a>
+  {% endblock %}
+  {% block Hamburger_Menu_Content %}
+    <a class="dropdown-item" href="#">My Account</a>
+    <a class="dropdown-item" href="http://localhost:8000/em_website/profile/">Edit Account</a>
+    <a class="dropdown-item" href="#">Logout</a>
+  {% endblock %}
+{% endif %}
 
 {% block content %}
 {% if user.is_authenticated %}
+
 <p></p>
   <h3>Welcome, {{ user.username }}!</h3>
   <table class="table">
