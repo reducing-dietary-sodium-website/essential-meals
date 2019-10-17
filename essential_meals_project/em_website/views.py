@@ -15,10 +15,7 @@ from django.http import Http404
 
 # Create your views here.
 def index(request):
-	return redirect("../accounts/login")
-
-def hello(request):
-	return render(request, "helloworld.html")
+	return redirect("../accounts/")
 
 def profile(request):
 	if request.method == 'POST':
@@ -56,6 +53,7 @@ def register(request):
 def home(request):
 	boards = Board.objects.all()
 	return render(request, "home.html", {'boards': boards})
+
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
     if request.method == 'POST':
@@ -74,17 +72,21 @@ def new_topic(request, pk):
     else:
         form = NewTopicForm()
     return render(request, 'new_topic.html', {'board': board, 'form': form})
+
 def board_topics(request, pk):
     board = Board.objects.get(pk=pk)
     return render(request, 'topics.html', {'board': board})
+
 def topic_posts(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
     return render(request, 'topic_posts.html', {'topic': topic})
+
 def index2(request,pk):
     recipes = Recipe.objects.all()
     t = loader.get_template('/index2.html')
     c = Context({'object_list': recipes})
     return HttpResponse(t.render(c))
+
 def detail(request,slug):
     recipe = get_object_or_404(Recipe,slug = slug)
     return render(request,'detail.html',{'object':recipe})

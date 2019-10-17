@@ -1,4 +1,17 @@
 {% extends 'base.html' %}
+
+{% if user.is_authenticated %}
+  {% block navbar_Content %}
+    <a class="navbar-brand"  href="http://localhost:8000/em_website/search/">Search</a>
+    <a class="navbar-brand"  href="#">Calendar</a>
+  {% endblock %}
+  {% block Hamburger_Menu_Content %}
+    <a class="dropdown-item" href="#">My Account</a>
+    <a class="dropdown-item" href="http://localhost:8000/em_website/profile/">Edit Account</a>
+    <a class="dropdown-item" href="#">Logout</a>
+  {% endblock %}
+{% endif %}
+
 {% block breadcrumb %}
     <li class="breadcrumb-item active"><a href='../search'>Back to search</a></li>
 {% endblock %}

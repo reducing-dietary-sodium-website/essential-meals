@@ -1,16 +1,20 @@
 {% extends "base.html" %}
 
 {% block navbar_Content %}
-  <a class="navbar-brand"  href="http://localhost:8000/em_website/search/">Search</a>
-  <a class="navbar-brand"  href="#">Calendar</a>
+    <li class="nav-item">
+        <a class="nav-link" href="http://localhost:8000/em_website/search/">Search</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Calendar</a>
+    </li>
 {% endblock %}
 
 {% if user.is_authenticated %}
-  {% block Hamburger_Menu_Content %}
-    <a class="dropdown-item" href="#">My Account</a>
-    <a class="dropdown-item" href="http://localhost:8000/em_website/profile/">Edit Account</a>
-    <a class="dropdown-item" href="#">Logout</a>
-  {% endblock %}
+    {% block Hamburger_Menu_Content %}
+        <a class="dropdown-item" href="#">My Account</a>
+        <a class="dropdown-item" href="http://localhost:8000/em_website/profile/">Edit Account</a>
+        <a class="dropdown-item" href="#">Logout</a>
+    {% endblock %}
 {% endif %}
 
 {% block breadcrumb %}
