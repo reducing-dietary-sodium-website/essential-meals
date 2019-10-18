@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block navbar_Content %}
-    <li class="nav-item active">
-        <a class="nav-link" href="/">Home</a>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'em_home' %}">Home</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="/search">Search</a>
+        <a class="nav-link" href="{% url 'em_search' %}">Search</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#">Calendar</a>
@@ -17,8 +17,8 @@
 {% endblock %}
 
 {% block Hamburger_Menu_Content %}
-    <a class="dropdown-item" href="http://localhost:8000/em_website/signup/">Sign up</a>
-    <a class="dropdown-item" href="http://localhost:8000/accounts/password_reset/">Forgot Password</a>
+    <a class="dropdown-item" href="{% url 'signup' %}">Sign up</a>
+    <a class="dropdown-item" href="{% url 'password_reset' %}">Forgot Password</a>
 {% endblock %}
 
 {% block breadcrumb %}
@@ -91,18 +91,18 @@
         <body>
             <div class="login_Container">
                 <h2>Login</h2>
+
                 <form method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit">Login</button>
+                    <button type="submit" style="border-radius: 15px">Login</button>
                 </form>
-                <form action="{% url 'signup' %}">
-                    <button type="submit">Signup</button>
-                </form>
-            </div>
 
-            <div class="container">
-                <span class="psw">Forgot <a href="http://localhost:8000/accounts/password_reset/">password?</a></span>
+                <form action="{% url 'signup' %}">
+                    <button type="submit" style="border-radius: 15px">Signup</button>
+                </form>
+
+                <span class="psw">Forgot <a href="{% url 'password_reset' %}">password?</a></span>
             </div>
         </body>
     </html>

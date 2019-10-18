@@ -14,8 +14,11 @@ from .models import Recipe
 from django.http import Http404
 
 # Create your views here.
-def index(request):
-	return redirect("../accounts/")
+# def index(request):
+# 	return redirect("../accounts/login")
+
+# def signup(request):
+#     return render(request, "signup.html", {'title': 'Password Reset'})
 
 def profile(request):
 	if request.method == 'POST':
@@ -29,10 +32,10 @@ def profile(request):
 		return render(request, 'profile.html', args)
 
 def login(request):
-	return render(request, "Registration/login.html", {'title': 'Login'})
+	return render(request, "em_website/Registration/login.html", {'title': 'Login'})
 
-def password_reset(request):
-    return render(request, "Registration/password_reset.html", {'title': 'Password Reset'})
+# def password_reset(request):
+#     return render(request, "em_website/password_reset.html", {'title': 'Password Reset'})
 
 def password_reset_done(request):
     return render(request, "Registration/password_reset_done.html", {'title': 'Password Reset Done'})
@@ -40,7 +43,7 @@ def password_reset_done(request):
 class SignUp(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
-    template_name = 'signup.html'
+    template_name = 'em_website/signup.html'
 
 # class Profile(generic.CreateView):
 #     form_class = UserChangeForm
@@ -86,7 +89,7 @@ def index2(request,pk):
     t = loader.get_template('/index2.html')
     c = Context({'object_list': recipes})
     return HttpResponse(t.render(c))
-
+    
 def detail(request,slug):
     recipe = get_object_or_404(Recipe,slug = slug)
     return render(request,'detail.html',{'object':recipe})
