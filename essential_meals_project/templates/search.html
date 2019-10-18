@@ -69,8 +69,6 @@
 	{% if user.is_authenticated %}
 		<div class="search_Container">
 			<h3>Search for a recipe</h3>
-
-			<div class="container">
 			<form action="{% url 'em_results' %}">
 				<input type="text" name="search">
 				<button class="search_Btn">Search</button>
@@ -78,8 +76,7 @@
 				<p>Gluten Free: <input type="checkbox" name="gluten">
 				Vegetarian:  <input type="checkbox" name="vegetarian"></p>
 			</form>
-			</div>
-	
+
 			<!-- TODO: Put all recipes even before searching. -->
 			<!-- TODO: Add some filter menus -->
 		</div>

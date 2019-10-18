@@ -54,9 +54,11 @@
         button:hover {
             opacity: 0.8;
         }
-        .container {
-            padding: 16px;
-        }
+        .search_results_Container {
+			padding: 16px;
+			width: 1000px;
+			margin: 0 auto;
+		}
         .recipe_list {
             padding: 12px;
             list-style-type: none;
@@ -75,15 +77,16 @@
 
 <body>
     {% if user.is_authenticated %}
-        <h3>Search Results</h3>
+        <div class="search_results_Container">
+            <h3>Search Results</h3>
 
-    <ul>
-        {% for key, value in recipes.items %}
-            <a class="recipe" href = {{ value.0 }}><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
-        {% endfor %}
-    </ul>
-
-
+            <ul>
+                {% for key, value in recipes.items %}
+                    <a class="recipe" href = {{ value.0 }}><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
+                {% endfor %}
+            </ul>
+        </div>
+        
     {% else %}
         <h3>You are not logged in</h3>
         <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
