@@ -1,0 +1,26 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Password reset on localhost:8000
+From: webmaster@localhost
+To: asdf1234@mail.com
+Date: Wed, 16 Oct 2019 15:00:24 -0000
+Message-ID: 
+ <157123802449.12440.17204330299552976973@DESKTOP-EB13918.lawn.gatech.edu>
+
+
+You're receiving this email because you requested a password reset for your user account at localhost:8000.
+
+Please go to the following page and choose a new password:
+
+http://localhost:8000/accounts/reset/NQ/5am-5b3da59568b8d577d5f5/
+
+Your username, in case you've forgotten: helloworld
+
+Thanks for using our site!
+
+The localhost:8000 team
+
+
+
+-------------------------------------------------------------------------------
