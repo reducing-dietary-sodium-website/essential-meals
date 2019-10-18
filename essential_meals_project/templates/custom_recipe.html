@@ -1,2 +1,64 @@
-from django.shortcuts import render
-from .models import Render
+{% extends 'base.html' %}
+{% block breadcrumb %}
+	<li class="breadcrumb-item active">Boards</li>
+{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		input[type=text] {
+            width: 50%;
+            padding: 8px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .search_Btn {
+        	background-color: #4CAF50;
+			width: auto;
+			opacity: 0.8;
+        	border: none;
+			cursor: pointer;
+			padding: 14px 20px;
+			margin: 8px 0;
+			color: white;
+        }
+        button:hover {
+
+        }
+        .container {
+			padding: 16px;
+		}
+	</style>
+</head>
+
+<body>
+	{% if user.is_authenticated %}
+	    <h3>{{ recipe.title }}</h3>
+	    <h4>Servings</h4>
+	    <p>{{ recipe.number_of_servings }}</p>
+	    <h4>Difficulty </h4>
+	    <p>{{ recipe.difficulty }}</p>
+	    <h4>Ingredients</h4>
+	    <!-- <ul>
+	    {% for ing in recipe.ingredients %}
+	    	<li> {{ ing }} </li>
+	    {% endfor %}
+	    </ul> -->
+	    <p>{{ recipe.ingredients }}</p>
+	    <h4>Directions</h4>
+	    <p>{{ recipe.preparation }}</p><p></p>
+	    <p>Created By {{ recipe.author }} </p>
+	{% else %}
+	    <h3>You are not logged in</h3>
+	    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
+	{% endif %}
+</body>
+
+</html>
+
+{% endblock %}

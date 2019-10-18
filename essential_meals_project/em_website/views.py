@@ -121,6 +121,15 @@ def results(request):
     for recipe in recipes:
         recipe = recipe['recipe']
         lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
+
+    #custom recipes
+    custom_recipes = Recipe.objects.filter(title__contains=query['search'])
+
     #print(lists)
-    return render(request, "results.html", {'title': 'Results',
+    return render(request, "results.html", {'title': 'Results', 'custom_recipes' : custom_recipes,
         'recipes': lists})
+
+def view_recipe(request, recipe):
+    # recipes = Recipe.objects.filter
+    toShow = Recipe.objects.get(slug=recipe)
+    return render(request, "custom_recipe.html", {'recipe' : toShow})
