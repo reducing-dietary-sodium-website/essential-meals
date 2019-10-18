@@ -88,11 +88,6 @@
 
 <body>
     {% if user.is_authenticated %}
-
-        <div class="imgcontainer">
-
-        </div>
-
         <div class="profile_Container">
             <h2>Profile</h2>
             <form method="post">
@@ -101,12 +96,10 @@
             <button type="submit" style="border-radius: 15px">Update Account</button>
             </form>
         </div>
-
     {% else %}
         <h3>You are not logged in</h3>
         <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
     {% endif %}
-
 </body>
 
 </html>

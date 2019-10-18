@@ -30,35 +30,50 @@
 
 {% block content %}
 {% if user.is_authenticated %}    
-
-<p></p>
-  <h3>Welcome, {{ user.username }}!</h3>
-  <table class="table">
-    <thead class="thead-inverse">
-      <tr>
-        <th>Board</th>
-        <th>Posts</th>
-        <th>Topics</th>
-        <th>Last Post</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for board in boards %}
-        <tr>
-          <td>
-            <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
-            <small class="text-muted d-block">{{ board.description }}</small>
-          </td>
-          <td class="align-middle">0</td>
-          <td class="align-middle">0</td>
-          <td></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <style>
+                .home_Container {
+                    padding: 16px;
+                    width: 1200px;
+                    margin: 0 auto;
+                }
+            </style>
+        </head>
+        <body>
+            <p></p>
+            <div class="home_Container">
+                <h3>Welcome, {{ user.username }}!</h3>
+                <table class="table">
+                    <thead class="thead-inverse">
+                    <tr>
+                        <th>Board</th>
+                        <th>Posts</th>
+                        <th>Topics</th>
+                        <th>Last Post</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for board in boards %}
+                        <tr>
+                        <td>
+                            <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
+                            <small class="text-muted d-block">{{ board.description }}</small>
+                        </td>
+                        <td class="align-middle">0</td>
+                        <td class="align-middle">0</td>
+                        <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </body>
+    </html>
+    
 {% else %}
-  <h3>You are not logged in</h3>
-  <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
+    <h3>You are not logged in</h3>
+    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
 {% endif %}
 {% endblock %}
