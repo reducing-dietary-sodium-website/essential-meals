@@ -3,4 +3,4 @@ env
 *.pyc
 __pycache__
 config.json
-essential_meals_project\db.sqlite3
+essential_meals_project/db.sqlite3
