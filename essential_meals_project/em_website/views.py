@@ -89,7 +89,7 @@ def index2(request,pk):
     t = loader.get_template('/index2.html')
     c = Context({'object_list': recipes})
     return HttpResponse(t.render(c))
-    
+
 def detail(request,slug):
     recipe = get_object_or_404(Recipe,slug = slug)
     return render(request,'detail.html',{'object':recipe})
@@ -108,24 +108,38 @@ def search(request):
 def results(request):
     querystr = request.META['QUERY_STRING']
     query = QueryDict(querystr)
-    appID = 'd2952d1f'
-    appKey = '9fda606325713a5d6aff3d0541d6c025'
-    # with open('config.json', 'r') as fh:
-    #     config = json.load(fh)
-    #     appID = config['appID']
-    #     appKey = config['appKEY']
-    task = "https://api.edamam.com/search?q={}&app_id=${}&app_key=${}&from=0&to=10&calories=591-722&nutrients[NA]=0-{}"
-    task = task.format(query['search'], appID, appKey, query['sodium'])
+    # appID = 'd2952d1f'
+    # appKey = '9fda606325713a5d6aff3d0541d6c025'
+    # # with open('config.json', 'r') as fh:
+    # #     config = json.load(fh)
+    # #     appID = config['appID']
+    # #     appKey = config['appKEY']
+    # task = "https://api.edamam.com/search?q={}&app_id=${}&app_key=${}&from=0&to=10&calories=591-722&nutrients[NA]=0-{}"
+    # task = task.format(query['search'], appID, appKey, query['sodium'])
+    # if 'vegetarian' in query:
+    #     task = task + '&health=vegetarian'
+    # if 'gluten' is query:
+    #     task = task + '&health=gluten-free'
+    # response = requests.get(task)
+    # recipes = response.json()['hits']
+    # lists = {}
+    # for recipe in recipes:
+    #     recipe = recipe['recipe']
+    #     lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
+    apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
+    search = 'https://api.spoonacular.com/recipes/complexSearch?query={}&maxSodium={}&instructionsRequired=true&number=20&apiKey={}'
+    search = search.format(query['search'], query['sodium'], apiKey)
     if 'vegetarian' in query:
-        task = task + '&health=vegetarian'
+        search = search + '&diet=vegetarian'
     if 'gluten' is query:
-        task = task + '&health=gluten-free'
-    response = requests.get(task)
-    recipes = response.json()['hits']
+        search = search + '&diet=gluten-free'
+    response1 = requests.get(search)
     lists = {}
-    for recipe in recipes:
-        recipe = recipe['recipe']
-        lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
-    #print(lists)
+    for recipe in response1.json()['results']:
+        print(recipe)
+        lists[str(recipe['title'])] = (str(recipe['id']), recipe['image'])
+        # info = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=true'
+        # info = info.format(recipe['id'])
+        # response2 = requests.get()
     return render(request, "results.html", {'title': 'Results',
         'recipes': lists})
