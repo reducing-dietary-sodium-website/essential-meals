@@ -22,7 +22,6 @@
     {% endif %}
 {% endblock %}
 
-
 {% block content %}
 <!DOCTYPE html>
 <html>
@@ -50,27 +49,27 @@
         button:hover {
 
         }
+        p {
+        	white-space: pre-line;
+        }
 
 	</style>
 </head>
 
 <body>
 	{% if user.is_authenticated %}
-	    <h3>{{ recipe.title }}</h3>
-	    <h4>Servings</h4>
-	    <p>{{ recipe.number_of_servings }}</p>
-	    <h4>Difficulty </h4>
-	    <p>{{ recipe.difficulty }}</p>
-	    <h4>Ingredients</h4>
-	    <!-- <ul>
-	    {% for ing in recipe.ingredients %}
-	    	<li> {{ ing }} </li>
-	    {% endfor %}
-	    </ul> -->
-	    <p>{{ recipe.ingredients }}</p>
-	    <h4>Directions</h4>
-	    <p>{{ recipe.preparation }}</p><p></p>
-	    <p>Created By {{ recipe.author }} </p>
+		<h3>{{ recipe.title }}</h3>
+		<h4>Servings</h4>
+		<p>{{ recipe.number_of_servings }}</p>
+		<h4>Ingredients</h4>
+		<p>{{ recipe.ingredients }}</p>
+		<h4>Directions</h4>
+		{% if fromAPI %}
+			<p>{{ recipe.preparation }} <a href="{{ recipe.source }}">here</a></p>
+		{% else %}
+		    <p>{{ recipe.preparation }}</p><p></p>
+		{% endif %}
+		<p>Created By {{ recipe.author }} </p>
 	{% else %}
 	    <h3>You are not logged in</h3>
 	    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>

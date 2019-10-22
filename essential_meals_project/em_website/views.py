@@ -141,13 +141,34 @@ def results(request):
     for recipe in response1.json()['results']:
         print(recipe)
         lists[str(recipe['title'])] = (str(recipe['id']), recipe['image'])
-        # info = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=true'
-        # info = info.format(recipe['id'])
-        # response2 = requests.get()
-    return render(request, "results.html", {'title': 'Results',
+
+    #custom recipes
+    custom_recipes = Recipe.objects.filter(title__contains=query['search'])
+
+    #print(lists)
+    return render(request, "results.html", {'title': 'Results', 'custom_recipes' : custom_recipes,
         'recipes': lists})
 
 def view_recipe(request, recipe):
     # recipes = Recipe.objects.filter
-    toShow = Recipe.objects.get(slug=recipe)
-    return render(request, "custom_recipe.html", {'recipe' : toShow})
+    fromAPI = recipe.isnumeric()
+    if fromAPI:
+        apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
+        result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
+        result = result.format(recipe, apiKey)
+        response1 = requests.get(result)
+        toShow = {}
+        toShow['title'] = response1.json()['title']
+        toShow['number_of_servings'] = response1.json()['servings']
+        ingredients = ''
+        for ingredient in response1.json()['extendedIngredients']:
+            ingredients += ingredient['original'] + '\n'
+        toShow['ingredients'] = ingredients
+        toShow['preparation'] = "For the instructions, please visit the original source "
+        toShow['author'] = response1.json()['sourceName']
+        toShow['source'] = response1.json()['sourceUrl']
+
+    if not fromAPI:
+        toShow = Recipe.objects.get(slug=recipe)
+    return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
+

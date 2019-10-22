@@ -79,10 +79,10 @@
 
     <ul>
         {% for recipe in custom_recipes %}
-            <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li> <img src="" height=100dp width=100dp> {{ recipe.title }} </li></a>
+            <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list"> <img src="" height=100dp width=100dp> {{ recipe.title }} </li></a>
         {% endfor %}
         {% for key, value in recipes.items %}
-            <a class="recipe" href = {{ value.0 }}><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
+            <a class="recipe" href ="{% url 'em_view_recipe' value.0 %}"><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
         {% endfor %}
     </ul>
 
