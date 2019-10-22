@@ -137,7 +137,6 @@ def results(request):
         search = search + '&maxSodium=' + query['sodium']
     response1 = requests.get(search)
     lists = {}
-    print(response1.json())
     for recipe in response1.json()['results']:
         print(recipe)
         lists[str(recipe['title'])] = (str(recipe['id']), recipe['image'])
@@ -157,6 +156,7 @@ def view_recipe(request, recipe):
         result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
         result = result.format(recipe, apiKey)
         response1 = requests.get(result)
+        print(response1.json())
         toShow = {}
         toShow['title'] = response1.json()['title']
         toShow['number_of_servings'] = response1.json()['servings']
@@ -164,7 +164,7 @@ def view_recipe(request, recipe):
         for ingredient in response1.json()['extendedIngredients']:
             ingredients += ingredient['original'] + '\n'
         toShow['ingredients'] = ingredients
-        toShow['preparation'] = "For the instructions, please visit the original source "
+        toShow['preparation'] = response1.json()['instructions']
         toShow['author'] = response1.json()['sourceName']
         toShow['source'] = response1.json()['sourceUrl']
 

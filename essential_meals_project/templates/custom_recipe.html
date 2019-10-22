@@ -52,24 +52,57 @@
         p {
         	white-space: pre-line;
         }
+        .card {
+		  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+		  padding: 16px;
+		  text-align: left;
+		  background-color: #f1f1f1;
+		}
+        .column {
+		  float: left;
+		  width: 50%;
+		  padding: 0 10px;
+		}
+
+		/* Responsive columns - one column layout (vertical) on small screens */
+		@media screen and (max-width: 600px) {
+		  .column {
+		    width: 90%;
+		    display: block;
+		    margin-bottom: 20px;
+		  }
+		}
 
 	</style>
 </head>
 
 <body>
 	{% if user.is_authenticated %}
-		<h3>{{ recipe.title }}</h3>
-		<h4>Servings</h4>
-		<p>{{ recipe.number_of_servings }}</p>
-		<h4>Ingredients</h4>
-		<p>{{ recipe.ingredients }}</p>
-		<h4>Directions</h4>
-		{% if fromAPI %}
-			<p>{{ recipe.preparation }} <a href="{{ recipe.source }}">here</a></p>
-		{% else %}
-		    <p>{{ recipe.preparation }}</p><p></p>
-		{% endif %}
-		<p>Created By {{ recipe.author }} </p>
+		<div style="margin-left: auto; margin-right:auto;">
+			<div class="column">
+				<div class="card">
+					<h3>{{ recipe.title }}</h3>
+					<h4>Servings</h4>
+					<p>{{ recipe.number_of_servings }}</p>
+					<h4>Ingredients</h4>
+					<p>{{ recipe.ingredients }}</p>
+				</div>
+			</div>
+			<div class="column">
+				<div class="card">
+				<h4>Directions</h4>
+					{% if fromAPI %}
+						<p>{{ recipe.preparation }}</p>
+						<p>Find the original recipe <a href="{{ recipe.source }}">here</a></p>
+					{% else %}
+					    <p>{{ recipe.preparation }}</p><p></p>
+					{% endif %}
+					<p>Created By {{ recipe.author }} </p>
+				</div>
+			</div>
+		</div>
+		
+		
 	{% else %}
 	    <h3>You are not logged in</h3>
 	    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
