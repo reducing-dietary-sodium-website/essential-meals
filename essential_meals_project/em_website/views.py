@@ -127,14 +127,17 @@ def results(request):
     #     recipe = recipe['recipe']
     #     lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
     apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
-    search = 'https://api.spoonacular.com/recipes/complexSearch?query={}&maxSodium={}&instructionsRequired=true&number=20&apiKey={}'
-    search = search.format(query['search'], query['sodium'], apiKey)
+    search = 'https://api.spoonacular.com/recipes/complexSearch?query={}&instructionsRequired=true&number=20&apiKey={}'
+    search = search.format(query['search'], apiKey)
     if 'vegetarian' in query:
         search = search + '&diet=vegetarian'
     if 'gluten' is query:
         search = search + '&diet=gluten-free'
+    if query['sodium'] != '':
+        search = search + '&maxSodium=' + query['sodium']
     response1 = requests.get(search)
     lists = {}
+    print(response1.json())
     for recipe in response1.json()['results']:
         print(recipe)
         lists[str(recipe['title'])] = (str(recipe['id']), recipe['image'])
