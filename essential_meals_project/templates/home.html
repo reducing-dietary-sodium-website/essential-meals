@@ -1,40 +1,80 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    Essential Meals - Home
+{% endblock %}
 
+{% block navbar_Content %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'em_home' %}">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'em_search' %}">Search</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Calendar</a>
+    </li>
+{% endblock %}
+
+
+{% block Hamburger_Menu_Content %}
+    {% if user.is_authenticated %}
+        <a class="dropdown-item" href="#">My Account</a>
+        <a class="dropdown-item" href="{% url 'em_profile' %}">Edit Account</a>
+        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <a class="dropdown-item" href="{% url 'signup' %}">Sign up</a>
+        <a class="dropdown-item" href="{% url 'password_reset' %}">Forgot Password</a>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-<p></p>
-  <h3>Welcome, {{ user.username }}!</h3>
-  <li><a href = "http://localhost:8000/em_website/recipes/">My Recipes</a>
-  <table class="table">
-    <thead class="thead-inverse">
-      <tr>
-        <th>Board</th>
-        <th>Posts</th>
-        <th>Topics</th>
-        <th>Last Post</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for board in boards %}
-        <tr>
-          <td>
-            <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
-            <small class="text-muted d-block">{{ board.description }}</small>
-          </td>
-          <td class="align-middle">0</td>
-          <td class="align-middle">0</td>
-          <td></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <form action="{% url 'logout' %}">
-         <button type="submit">Logout</button>
-  </form>
+{% if user.is_authenticated %}    
+    <!DOCTYPE html>
+    <html>
+        <head>
+                <li><a href = "http://localhost:8000/em_website/recipes/">My Recipes</a>
+            <style>
+                .home_Container {
+                    padding: 16px;
+                    width: 1200px;
+                    margin: 0 auto;
+                }
+            </style>
+        </head>
+        <body>
+            <p></p>
+            <div class="home_Container">
+                <h3>Welcome, {{ user.username }}!</h3>
+                <table class="table">
+                    <thead class="thead-inverse">
+                    <tr>
+                        <th>Board</th>
+                        <th>Posts</th>
+                        <th>Topics</th>
+                        <th>Last Post</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for board in boards %}
+                        <tr>
+                        <td>
+                            <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
+                            <small class="text-muted d-block">{{ board.description }}</small>
+                        </td>
+                        <td class="align-middle">0</td>
+                        <td class="align-middle">0</td>
+                        <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </body>
+    </html>
+    
 {% else %}
-  <h3>You are not logged in</h3>
-  <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
+    <h3>You are not logged in</h3>
+    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
 {% endif %}
 {% endblock %}

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+    Essential Meals - Signup
+{% endblock %}
+
 {% block navbar_Content %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'em_home' %}">Home</a>
@@ -13,14 +17,8 @@
 {% endblock %}
 
 {% block Hamburger_Menu_Content %}
-    {% if user.is_authenticated %}
-        <a class="dropdown-item" href="#">My Account</a>
-        <a class="dropdown-item" href="{% url 'em_profile' %}">Edit Account</a>
-        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-    {% else %}
-        <a class="dropdown-item" href="{% url 'signup' %}">Sign up</a>
-        <a class="dropdown-item" href="{% url 'password_reset' %}">Forgot Password</a>
-    {% endif %}
+    <a class="dropdown-item" href="{% url 'signup' %}">Sign up</a>
+    <a class="dropdown-item" href="{% url 'password_reset' %}">Forgot Password</a>
 {% endblock %}
 
 {% block breadcrumb %}
@@ -28,13 +26,14 @@
 {% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <style>
         body {font-family: Arial, Helvetica, sans-serif;}
         form {border: 3px solid #ffffff;}
+
         input[type=text], input[type=password] {
             width: 100%;
             padding: 12px 20px;
@@ -43,6 +42,12 @@
             border: 1px solid #ccc;
             box-sizing: border-box;
         }
+        .signup_Container {
+            padding: 16px;
+            width: 600px;
+            margin:0 auto;
+        }
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -52,56 +57,63 @@
             cursor: pointer;
             width: 200px;
         }
+
         button:hover {
             opacity: 0.8;
         }
+
         .cancelbtn {
-            width: auto;
-            padding: 10px 18px;
-            background-color: #f44336;
+          width: auto;
+          padding: 10px 18px;
+          background-color: #f44336;
         }
+
         .imgcontainer {
-            text-align: center;
-            margin: 24px 0 12px 0;
+          text-align: center;
+          margin: 24px 0 12px 0;
         }
-        .profile_Container {
-            padding: 16px;
-            width: 1000px;
-            margin: 0 auto;
+
+        /*img.avatar {
+          width: 40%;
+          border-radius: 50%;
+        }*/
+
+        .container {
+          padding: 16px;
         }
+
         span.psw {
-            float: right;
-            padding-top: 16px;
+          float: right;
+          padding-top: 16px;
         }
+
         /* Change styles for span and cancel button on extra small screens */
         @media screen and (max-width: 300px) {
-            span.psw {
-            display: block;
-            float: none;
-            }
-            .cancelbtn {
-                width: 100%;
-            }
+          span.psw {
+             display: block;
+             float: none;
+          }
+          .cancelbtn {
+             width: 100%;
+          }
         }
-</style>
-</head>
+      </style>
+    </head>
 
-<body>
-    {% if user.is_authenticated %}
-        <div class="profile_Container">
-            <h2>Profile</h2>
+    <body>
+        <div class="signup_Container">
+            <h2>Sign up</h2>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-            <button type="submit" style="border-radius: 15px">Update Account</button>
+                <button type="submit" style="border-radius: 15px;">Sign up</button>
+            </form>
+            <form action="{% url 'login' %}">
+                <button type="submit" style="border-radius: 15px; background-color: rgb(185, 178, 178);">Cancel</button>
             </form>
         </div>
-    {% else %}
-        <h3>You are not logged in</h3>
-        <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
-    {% endif %}
-</body>
+    </body>
 
-</html>
+  </html>
 
 {% endblock content %}

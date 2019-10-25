@@ -1,0 +1,26 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Password reset on localhost:8000
+From: webmaster@localhost
+To: tgl132435@hanmail.net
+Date: Sat, 05 Oct 2019 18:26:43 -0000
+Message-ID: 
+ <157030000322.6300.5223304534510184048@DESKTOP-EB13918.hsd1.ga.comcast.net>
+
+
+You're receiving this email because you requested a password reset for your user account at localhost:8000.
+
+Please go to the following page and choose a new password:
+
+http://localhost:8000/accounts/reset/NA/5ab-8488c486ed0ecc58cfc1/
+
+Your username, in case you've forgotten: joonAdmin
+
+Thanks for using our site!
+
+The localhost:8000 team
+
+
+
+-------------------------------------------------------------------------------

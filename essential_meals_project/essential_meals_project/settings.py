@@ -60,10 +60,14 @@ SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(SETTINGS_PATH, 'essential_meals_project', 'templates'),
-                 os.path.join(SETTINGS_PATH, 'em_website', 'templates'),
-                 os.path.join(BASE_DIR, 'templates'),
-                 'templates'],
+        # 'DIRS': [os.path.join(SETTINGS_PATH, 'essential_meals_project', 'templates'),
+        #          os.path.join(SETTINGS_PATH, 'em_website', 'templates'),
+        #          os.path.join(BASE_DIR, 'templates'),
+        #          'templates'],
+        # 'DIRS': [os.path.join(SETTINGS_PATH, 'templates'),
+        #          os.path.join(SETTINGS_PATH, 'templates', 'Registration')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),
+                 ],
                  
 
         'APP_DIRS': True,
@@ -137,5 +141,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-LOGIN_REDIRECT_URL = '/em_website/home/'
+LOGIN_REDIRECT_URL = '/em_website/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
