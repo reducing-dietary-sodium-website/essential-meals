@@ -1,12 +1,21 @@
-{% extends "base2.html" %}
+{% extends "base.html" %}
 
 {% block title %}{{ block.super }} - All Recipes{% endblock %}
 
 {% block content %}
+<p> </p> 
+<p> </p> 
+<p> </p> 
+<div class="mb-4">
+  <a href="{% url 'new_recipe'  %}" class="btn btn-primary">New recipe</a>
+</div>
 <h2>All Recipes</h2>
 <ul>
-    {% for recipe in object_list %}
-    <li><a href="/rezept/{{ recipe.slug }}/">{{ recipe.title }}</a></li>
+    <!-- <li><a href="/recipes/{{ recipe.slug }}/">{{ recipe.title }}</a></li> -->
+    
+    {% for recipe in object_list%}
+    
+    <li><a href="recipes/{{ recipe.slug }}/">{{ recipe.title }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}
