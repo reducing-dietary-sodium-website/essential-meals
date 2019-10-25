@@ -89,7 +89,7 @@ def index2(request,pk):
     t = loader.get_template('/index2.html')
     c = Context({'object_list': recipes})
     return HttpResponse(t.render(c))
-    
+
 def detail(request,slug):
     recipe = get_object_or_404(Recipe,slug = slug)
     return render(request,'detail.html',{'object':recipe})
@@ -108,24 +108,67 @@ def search(request):
 def results(request):
     querystr = request.META['QUERY_STRING']
     query = QueryDict(querystr)
-    appID = 'd2952d1f'
-    appKey = '9fda606325713a5d6aff3d0541d6c025'
-    # with open('config.json', 'r') as fh:
-    #     config = json.load(fh)
-    #     appID = config['appID']
-    #     appKey = config['appKEY']
-    task = "https://api.edamam.com/search?q={}&app_id=${}&app_key=${}&from=0&to=10&calories=591-722&nutrients[NA]=0-{}"
-    task = task.format(query['search'], appID, appKey, query['sodium'])
+    # appID = 'd2952d1f'
+    # appKey = '9fda606325713a5d6aff3d0541d6c025'
+    # # with open('config.json', 'r') as fh:
+    # #     config = json.load(fh)
+    # #     appID = config['appID']
+    # #     appKey = config['appKEY']
+    # task = "https://api.edamam.com/search?q={}&app_id=${}&app_key=${}&from=0&to=10&calories=591-722&nutrients[NA]=0-{}"
+    # task = task.format(query['search'], appID, appKey, query['sodium'])
+    # if 'vegetarian' in query:
+    #     task = task + '&health=vegetarian'
+    # if 'gluten' is query:
+    #     task = task + '&health=gluten-free'
+    # response = requests.get(task)
+    # recipes = response.json()['hits']
+    # lists = {}
+    # for recipe in recipes:
+    #     recipe = recipe['recipe']
+    #     lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
+    apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
+    search = 'https://api.spoonacular.com/recipes/complexSearch?query={}&instructionsRequired=true&number=20&apiKey={}'
+    search = search.format(query['search'], apiKey)
     if 'vegetarian' in query:
-        task = task + '&health=vegetarian'
+        search = search + '&diet=vegetarian'
     if 'gluten' is query:
-        task = task + '&health=gluten-free'
-    response = requests.get(task)
-    recipes = response.json()['hits']
+        search = search + '&diet=gluten-free'
+    if query['sodium'] != '':
+        search = search + '&maxSodium=' + query['sodium']
+    response1 = requests.get(search)
     lists = {}
-    for recipe in recipes:
-        recipe = recipe['recipe']
-        lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
+    for recipe in response1.json()['results']:
+        print(recipe)
+        lists[str(recipe['title'])] = (str(recipe['id']), recipe['image'])
+
+    #custom recipes
+    custom_recipes = Recipe.objects.filter(title__contains=query['search'])
+
     #print(lists)
-    return render(request, "results.html", {'title': 'Results',
+    return render(request, "results.html", {'title': 'Results', 'custom_recipes' : custom_recipes,
         'recipes': lists})
+
+def view_recipe(request, recipe):
+    # recipes = Recipe.objects.filter
+    fromAPI = recipe.isnumeric()
+    if fromAPI:
+        apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
+        result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
+        result = result.format(recipe, apiKey)
+        response1 = requests.get(result)
+        print(response1.json())
+        toShow = {}
+        toShow['title'] = response1.json()['title']
+        toShow['number_of_servings'] = response1.json()['servings']
+        ingredients = ''
+        for ingredient in response1.json()['extendedIngredients']:
+            ingredients += ingredient['original'] + '\n'
+        toShow['ingredients'] = ingredients
+        toShow['preparation'] = response1.json()['instructions']
+        toShow['author'] = response1.json()['sourceName']
+        toShow['source'] = response1.json()['sourceUrl']
+
+    if not fromAPI:
+        toShow = Recipe.objects.get(slug=recipe)
+    return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
+
