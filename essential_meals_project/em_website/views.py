@@ -31,6 +31,9 @@ def profile(request):
 		args = {'form': form}
 		return render(request, 'profile.html', args)
 
+def myAccount(request):
+    return render(request, "myAccount.html", {'title': 'myAccount'})
+
 def login(request):
 	return render(request, "em_website/Registration/login.html", {'title': 'Login'})
 

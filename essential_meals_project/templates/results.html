@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    Essential Meals - Results
+{% endblock %}
+
 {% block navbar_Content %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'em_home' %}">Home</a>
@@ -14,7 +18,7 @@
 
 {% block Hamburger_Menu_Content %}
     {% if user.is_authenticated %}
-        <a class="dropdown-item" href="#">My Account</a>
+        <a class="dropdown-item" href="{% url 'em_myAccount' %}">My Account</a>
         <a class="dropdown-item" href="{% url 'em_profile' %}">Edit Account</a>
         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
     {% else %}

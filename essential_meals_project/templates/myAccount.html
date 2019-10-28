@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Essential Meals - Edit Account
+    Essential Meals - My Account
 {% endblock %}
 
 {% block navbar_Content %}
@@ -25,10 +25,6 @@
         <a class="dropdown-item" href="{% url 'signup' %}">Sign up</a>
         <a class="dropdown-item" href="{% url 'password_reset' %}">Forgot Password</a>
     {% endif %}
-{% endblock %}
-
-{% block breadcrumb %}
-    <li class="breadcrumb-item active">Welcome to Essential Meals</li>
 {% endblock %}
 
 {% block content %}
@@ -87,18 +83,16 @@
                 width: 100%;
             }
         }
-</style>
+    </style>
 </head>
 
 <body>
     {% if user.is_authenticated %}
         <div class="profile_Container">
             <h2>Profile</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-            <button type="submit" style="border-radius: 15px">Update Account</button>
-            </form>
+            ID: {{user.get_username}} </br>
+            Email Address: {{user.email}}
+            <!-- TODO: Put more account's information -->
         </div>
     {% else %}
         <h3>You are not logged in</h3>
@@ -107,5 +101,4 @@
 </body>
 
 </html>
-
-{% endblock content %}
+{% endblock %}
