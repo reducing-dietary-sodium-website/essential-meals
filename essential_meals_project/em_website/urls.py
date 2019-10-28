@@ -17,8 +17,7 @@ urlpatterns = [
     path('search/', views.search, name='em_search'),
     path('results/', views.results, name='em_results'),
     path('view_recipe/<slug:recipe>/', views.view_recipe, name='em_view_recipe'),
-    re_path('boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
-    re_path('boards/(?P<pk>\d+)/new$', views.new_topic, name='new_topic'),
+   
     #path('recipes/',views.detail,name = 'detail'),
     re_path(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
     #re_path(r'boards/(?P<pk>\d+)/category/(?P<slug>\d+)/details$',views.detail, name = 'detail'),
