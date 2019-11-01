@@ -2,6 +2,8 @@ from django import forms
 from .models import Topic
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
+from django.forms import ModelForm, DateInput
+from em_website.models import Event
 
 class NewTopicForm(forms.ModelForm):
     message = forms.CharField(
