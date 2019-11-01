@@ -1,5 +1,4 @@
-from django.http import HttpResponse
-from django.http import QueryDict
+from django.http import HttpResponse, QueryDict, Http404
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewTopicForm, EditProfileForm
@@ -11,7 +10,6 @@ import requests
 import json
 from django.template import Context, loader
 from .models import Recipe
-from django.http import Http404
 
 # Create your views here.
 # def index(request):
