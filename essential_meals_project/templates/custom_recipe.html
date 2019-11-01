@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block navbar_Content %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'em_home' %}">Home</a>
@@ -21,10 +20,6 @@
         <a class="dropdown-item" href="{% url 'signup' %}">Sign up</a>
         <a class="dropdown-item" href="{% url 'password_reset' %}">Forgot Password</a>
     {% endif %}
-{% endblock %}
-
-{% block breadcrumb %}
-	<li class="breadcrumb-item active">Boards</li>
 {% endblock %}
 
 {% block content %}
@@ -51,39 +46,63 @@
 			margin: 8px 0;
 			color: white;
         }
-		button {
-			border-radius: 15px;
-		}
         button:hover {
-			opacity: 0.8;
+
+        }
+        p {
+        	white-space: pre-line;
+        }
+        .card {
+		  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+		  padding: 16px;
+		  text-align: left;
+		  background-color: #f1f1f1;
 		}
-        .search_Container {
-			padding: 16px;
-			width: 1000px;
-			margin: 0 auto;
+        .column {
+		  float: left;
+		  width: 50%;
+		  padding: 0 10px;
 		}
+
+		/* Responsive columns - one column layout (vertical) on small screens */
+		@media screen and (max-width: 600px) {
+		  .column {
+		    width: 90%;
+		    display: block;
+		    margin-bottom: 20px;
+		  }
+		}
+
 	</style>
 </head>
 
 <body>
 	{% if user.is_authenticated %}
-		<div class="search_Container">
-			<h3>Search for a recipe</h3>
-
-			<div class="container">
-			<form action="{% url 'em_results' %}">
-				<input type="text" name="search">
-				<button class="search_Btn">Search</button>
-				<p>Sodium Limit Per Serving (mg): <input type="number" name="sodium"></p>
-				<p>Gluten Free: <input type="checkbox" name="gluten">
-				Vegetarian:  <input type="checkbox" name="vegetarian"></p>
-			</form>
+		<div style="margin-left: auto; margin-right:auto;">
+			<div class="column">
+				<div class="card">
+					<h3>{{ recipe.title }}</h3>
+					<h4>Servings</h4>
+					<p>{{ recipe.number_of_servings }}</p>
+					<h4>Ingredients</h4>
+					<p>{{ recipe.ingredients }}</p>
+				</div>
 			</div>
-	
-			<!-- TODO: Put all recipes even before searching. -->
-			<!-- TODO: Add some filter menus -->
+			<div class="column">
+				<div class="card">
+				<h4>Directions</h4>
+					{% if fromAPI %}
+						<p>{{ recipe.preparation }}</p>
+						<p>Find the original recipe <a href="{{ recipe.source }}">here</a></p>
+					{% else %}
+					    <p>{{ recipe.preparation }}</p><p></p>
+					{% endif %}
+					<p>Created By {{ recipe.author }} </p>
+				</div>
+			</div>
 		</div>
-	    
+		
+		
 	{% else %}
 	    <h3>You are not logged in</h3>
 	    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>

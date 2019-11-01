@@ -1,0 +1,26 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Password reset on 127.0.0.1:8000
+From: webmaster@localhost
+To: asdf1234@mail.com
+Date: Fri, 18 Oct 2019 13:11:42 -0000
+Message-ID: 
+ <157140430225.19452.13950062869178803697@DESKTOP-EB13918.lawn.gatech.edu>
+
+
+You're receiving this email because you requested a password reset for your user account at 127.0.0.1:8000.
+
+Please go to the following page and choose a new password:
+
+http://127.0.0.1:8000/em_website/env/reset/NQ/5ao-7640b2ebf6b87f8d9ee7/
+
+Your username, in case you've forgotten: helloworld
+
+Thanks for using our site!
+
+The 127.0.0.1:8000 team
+
+
+
+-------------------------------------------------------------------------------

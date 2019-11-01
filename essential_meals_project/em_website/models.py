@@ -59,7 +59,7 @@ class Recipe(models.Model):
     title = models.CharField(u'Title', max_length=255)
     slug = models.SlugField(unique=True)
     ingredients = models.TextField(u'Indigrents',
-        help_text=u'One indigrent per line')
+        help_text=u'One ingredient per line')
     preparation = models.TextField(u'Preparation')
     time_for_preparation = models.IntegerField(u'Preparation time',
         help_text=u'Zeit in Minuten angeben', blank=True, null=True)
