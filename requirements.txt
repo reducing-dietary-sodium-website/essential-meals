@@ -3,3 +3,4 @@ django-widget-tweaks==1.4.5
 pytz==2019.2
 sqlparse==0.3.0
 requests
+essential_meals_project/db.sqlite3
