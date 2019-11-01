@@ -11,7 +11,7 @@ import requests
 import json
 import datetime
 from django.template import Context, loader
-from .models import Recipe
+from .models import Recipe, SavedRecipe
 from django.http import Http404
 from django.template.defaultfilters import slugify
 
@@ -56,8 +56,8 @@ def register(request):
     return render(request, "Registration/registration.html", {'title': 'Register'})
 
 def home(request):
-	boards = Board.objects.all()
-	return render(request, "home.html", {'boards': boards})
+	saved_recipes = SavedRecipe.objects.filter(user=request.user.username)
+	return render(request, "home.html", {'saved_recipes': saved_recipes})
 
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
@@ -84,7 +84,7 @@ def new_recipe(request):
          if form.is_valid():
              Recipe.objects.create(
                  title = form.cleaned_data.get('title'),
-                 slug = slugify(form.cleaned_data.get('title')+ datetime.datetime.now().strftime('%H:%M:%S'))  ,
+                 slug = slugify(form.cleaned_data.get('title')+ datetime.datetime.now().strftime('%H%M%S'))  ,
                  ingredients= form.cleaned_data.get('ingredients'),
                  preparation= form.cleaned_data.get('preparation'),
                  time_for_preparation= form.cleaned_data.get('time_for_preparation'),
@@ -163,26 +163,39 @@ def results(request):
         'recipes': lists})
 
 def view_recipe(request, recipe):
-    # recipes = Recipe.objects.filter
-    fromAPI = recipe.isnumeric()
-    if fromAPI:
-        apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
-        result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
-        result = result.format(recipe, apiKey)
-        response1 = requests.get(result)
-        print(response1.json())
-        toShow = {}
-        toShow['title'] = response1.json()['title']
-        toShow['number_of_servings'] = response1.json()['servings']
-        ingredients = ''
-        for ingredient in response1.json()['extendedIngredients']:
-            ingredients += ingredient['original'] + '\n'
-        toShow['ingredients'] = ingredients
-        toShow['preparation'] = response1.json()['instructions']
-        toShow['author'] = response1.json()['sourceName']
-        toShow['source'] = response1.json()['sourceUrl']
+    if request.method == 'POST':
+        print("SAVING RECIPE")
+        SavedRecipe.objects.create(
+            name = request.session['name'],
+            user = request.session['user'],
+            slug = request.session['slug']
+        )
+        return render(request, "custom_recipe.html", {'recipe' : request.session['curr'], 'fromAPI' : request.session['fromAPI']})
+    else:
+        fromAPI = recipe.isnumeric()
+        if fromAPI:
+            apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
+            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
+            result = result.format(recipe, apiKey)
+            response1 = requests.get(result)
+            print(response1.json())
+            toShow = {}
+            toShow['title'] = response1.json()['title']
+            toShow['number_of_servings'] = response1.json()['servings']
+            ingredients = ''
+            for ingredient in response1.json()['extendedIngredients']:
+                ingredients += ingredient['original'] + '\n'
+            toShow['ingredients'] = ingredients
+            toShow['preparation'] = response1.json()['instructions']
+            toShow['author'] = response1.json()['sourceName']
+            toShow['source'] = response1.json()['sourceUrl']
 
-    if not fromAPI:
-        toShow = Recipe.objects.get(slug=recipe)
-    return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
+        if not fromAPI:
+            toShow = Recipe.objects.get(slug=recipe)
+        request.session['user'] = request.user.username
+        request.session['name'] = toShow['title']
+        request.session['slug'] = recipe
+        request.session['curr'] = toShow
+        request.session['fromAPI'] = fromAPI
+        return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
 

@@ -84,3 +84,19 @@ class Recipe(models.Model):
             self.date_created = now()
         self.date_updated = now()
         super(Recipe, self).save(*args, **kwargs)
+
+class SavedRecipe(models.Model):
+    """
+    A model class describing a saved recipe.
+    """
+    name = models.CharField(u'Name', max_length=100)
+    user = models.CharField(u'User', max_length=100)
+    slug = models.SlugField(unique=False)
+
+    class Meta:
+        verbose_name = u'Saved Recipe'
+        verbose_name_plural = u'Saved Recipes'
+        ordering = ['name', 'user']
+
+    def __unicode__(self):
+        return self.name
