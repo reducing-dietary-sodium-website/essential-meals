@@ -1,5 +1,3 @@
-from django.db import models
-
 # Create your models here.
 from django.db import models
 from django.utils.timezone import now
@@ -84,3 +82,9 @@ class Recipe(models.Model):
             self.date_created = now()
         self.date_updated = now()
         super(Recipe, self).save(*args, **kwargs)
+
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()

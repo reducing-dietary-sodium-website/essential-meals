@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    Essential Meals - Results
+{% endblock %}
+
 {% block navbar_Content %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'em_home' %}">Home</a>
@@ -14,7 +18,7 @@
 
 {% block Hamburger_Menu_Content %}
     {% if user.is_authenticated %}
-        <a class="dropdown-item" href="#">My Account</a>
+        <a class="dropdown-item" href="{% url 'em_myAccount' %}">My Account</a>
         <a class="dropdown-item" href="{% url 'em_profile' %}">Edit Account</a>
         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
     {% else %}
@@ -54,9 +58,11 @@
         button:hover {
             opacity: 0.8;
         }
-        .container {
-            padding: 16px;
-        }
+        .search_results_Container {
+			padding: 16px;
+			width: 1000px;
+			margin: 0 auto;
+		}
         .recipe_list {
             padding: 12px;
             list-style-type: none;
@@ -75,18 +81,17 @@
 
 <body>
     {% if user.is_authenticated %}
-        <h3>Search Results</h3>
-
-    <ul>
-        {% for recipe in custom_recipes %}
-            <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list"> <img src="" height=100dp width=100dp> {{ recipe.title }} </li></a>
-        {% endfor %}
-        {% for key, value in recipes.items %}
-            <a class="recipe" href ="{% url 'em_view_recipe' value.0 %}"><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
-        {% endfor %}
-    </ul>
-
-
+        <div class="search_results_Container">
+            <h3>Search Results</h3>
+            <ul>
+                {% for recipe in custom_recipes %}
+                    <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list"> <img src="" height=100dp width=100dp> {{ recipe.title }} </li></a>
+                {% endfor %}
+                {% for key, value in recipes.items %}
+                    <a class="recipe" href ="{% url 'em_view_recipe' value.0 %}"><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
+                {% endfor %}
+            </ul>
+        </div>
     {% else %}
         <h3>You are not logged in</h3>
         <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
