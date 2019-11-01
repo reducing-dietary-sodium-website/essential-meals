@@ -12,11 +12,12 @@ import json
 import calendar
 from django.template import Context, loader
 from .models import Recipe, Event
-from datetime import timedelta
+from datetime import timedelta, date
 from .utils import Calendar
 from django.http import Http404
 from datetime import datetime
 from django.utils.safestring import mark_safe
+
 
 # Create your views here.
 # def index(request):
@@ -220,5 +221,5 @@ def next_month(d):
 def get_date(req_day):
     if req_day:
         year, month = (int(x) for x in req_day.split('-'))
-        return datetime(year, month, day=1)
+        return date(year, month, day=1)
     return datetime.today()

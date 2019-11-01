@@ -13,7 +13,7 @@
     <title>Django Calendar App</title>
     
     <style>
-        /* .calendar {
+        .calendar {
             width: 98%;
             margin: auto;
             font-size: 13px;
@@ -68,13 +68,17 @@
 
         .clearfix {
             margin: 15px;
-        } */
+        }
     </style>
 </head>
 <body>
 
     <!-- {'% block content %}
     {'% endblock %} -->
+    <div class="clearfix">
+        <a class="btn btn-info left" href="{% url 'em_calendar' %}?{{ prev_month }}"> Previous Month </a>
+        <a class="btn btn-info right" href="{% url 'em_calendar' %}?{{ next_month }}"> Next Month </a>
+    </div>
     {{ calendar }}
 
     <!-- Optional JavaScript -->
