@@ -1,5 +1,5 @@
-from django.http import HttpResponse
-from django.http import QueryDict
+from django.http import HttpResponse, HttpResponseRedirect, QueryDict, Http404
+# from events.forms import EventForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewTopicForm, EditProfileForm
@@ -14,9 +14,9 @@ from django.template import Context, loader
 from .models import Recipe, Event
 from datetime import timedelta, date
 from .utils import Calendar
-from django.http import Http404
 from datetime import datetime
 from django.utils.safestring import mark_safe
+# from django.core.urlresolvers import reverses
 
 
 # Create your views here.
@@ -223,3 +223,16 @@ def get_date(req_day):
         year, month = (int(x) for x in req_day.split('-'))
         return date(year, month, day=1)
     return datetime.today()
+
+def event(request, event_id=None):
+    instance = Event()
+    if event_id:
+        instance = get_object_or_404(Event, pk=event_id)
+    else:
+        instance = Event()
+    
+    form = EventForm(request.POST or None, instance=instance)
+    if request.POST and form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('em_calendar'))
+    return render(request, 'em_website/event.html', {'form': form})
