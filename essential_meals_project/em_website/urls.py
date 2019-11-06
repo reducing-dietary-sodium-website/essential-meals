@@ -26,5 +26,6 @@ urlpatterns = [
     #re_path(r'boards/(?P<pk>\d+)/category/(?P<slug>\d+)/details$',views.detail, name = 'detail'),
     #re_path('boards/(?P<slug>\d+)/category/recipes$',views.index2, name = 'index2'),
     re_path(r'^recipes/(?P<slug>[-\w]+)/$',views.detail, name = 'details'),
-    path('calendar/', views.CalendarView.as_view(), name='em_calendar'),
+    # path('calendar/', views.CalendarView.as_view(), name='em_calendar'),
+    url(r'^calendar/$', views.CalendarView.as_view(), name='em_calendar')
 ]
