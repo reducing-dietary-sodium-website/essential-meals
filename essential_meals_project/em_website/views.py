@@ -189,7 +189,7 @@ class CalendarView(generic.ListView):
         context = super().get_context_data(**kwargs)
 
         # use today's date for the calendar
-        d = get_date(self.request.GET.get('day', None))
+        d = get_date(self.request.GET.get('month', None))
 
         # Instantiate our calendar class with today's year and date
         cal = Calendar(d.year, d.month)
