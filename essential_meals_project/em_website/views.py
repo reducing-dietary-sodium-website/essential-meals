@@ -9,23 +9,16 @@ from django.urls import reverse_lazy
 from django.views import generic
 import requests
 import json
-<<<<<<< HEAD
 import datetime
 from django.template import Context, loader
-from .models import Recipe, SavedRecipe
+from .models import Recipe, SavedRecipe, Event
 from django.http import Http404
 from django.template.defaultfilters import slugify
-=======
 import calendar
-from django.template import Context, loader
-from .models import Recipe, Event
 from datetime import timedelta, date
 from .utils import Calendar
 from datetime import datetime
 from django.utils.safestring import mark_safe
-# from django.core.urlresolvers import reverses
-
->>>>>>> joon
 
 # Create your views here.
 # def index(request):
