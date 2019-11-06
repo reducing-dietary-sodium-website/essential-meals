@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Essential Meals - Calendar
+{% endblock %}
+
+{% block navbar_Content %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'em_home' %}">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'em_search' %}">Search</a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'em_calendar' %}">Calendar</a>
+    </li>
+{% endblock %}
+
+
+{% block Hamburger_Menu_Content %}
+    {% if user.is_authenticated %}
+        <a class="dropdown-item" href="{% url 'em_myAccount' %}">My Account</a>
+        <a class="dropdown-item" href="{% url 'em_profile' %}">Edit Account</a>
+        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <a class="dropdown-item" href="{% url 'signup' %}">Sign up</a>
+        <a class="dropdown-item" href="{% url 'password_reset' %}">Forgot Password</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% load staticfiles %}
+        <!doctype html>
+        <html lang="en">
+
+        <head>
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <!-- Bootstrap CSS -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
+            <title>Django Calendar App</title>
+            <style>
+                .calendar {
+                    width: 98%;
+                    margin: auto;
+                    font-size: 13px;
+                }
+
+                .calendar tr, .calendar td {
+                    border: 1px solid black;
+                }
+
+                .calendar th {
+                    padding: 10px;
+                    text-align: center;
+                    font-size: 18px;
+                }
+
+                .calendar td {
+                    width: 200px;
+                    height: 150px;
+                    padding: 20px 0px 0px 5px;
+                }
+
+                .month {
+                    font-size: 25px;
+                }
+
+                .date {
+                    font-size: 16px;
+                }
+
+                ul {
+                    height: 100%;
+                    padding: 0px 5px 0px 20px;
+                }
+
+                a {
+                    color: #17a2b8;
+                }
+                .left {
+                    float: left;
+                }
+
+                .right {
+                    float: right;
+                }
+
+                .btn {
+                    outline: none;
+                    color: black;
+                    background-color: transparent;
+                    box-shadow: 0 0 0 0;
+                }
+
+                .clearfix {
+                    margin: 15px;
+                }
+            </style>
+        </head>
+        <body>
+
+            <div class="clearfix">
+                <a class="btn btn-info left" href="{% url 'em_calendar' %}?{{ prev_month }}"> Previous Month </a>
+                <a class="btn btn-info right" href="{% url 'em_calendar' %}?{{ next_month }}"> Next Month </a>
+            </div>
+            {{ calendar }}
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
+
+            {% block script %}
+            {% endblock %}
+        </body>
+        </html>
+
+    {% else %}
+        <h3>You are not logged in</h3>
+        <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
+    {% endif %}
+{% endblock %}

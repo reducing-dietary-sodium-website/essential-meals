@@ -1,5 +1,5 @@
-from django.http import HttpResponse
-from django.http import QueryDict
+from django.http import HttpResponse, HttpResponseRedirect, QueryDict, Http404
+# from events.forms import EventForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewTopicForm, EditProfileForm, NewRecipeForm
@@ -9,11 +9,23 @@ from django.urls import reverse_lazy
 from django.views import generic
 import requests
 import json
+<<<<<<< HEAD
 import datetime
 from django.template import Context, loader
 from .models import Recipe, SavedRecipe
 from django.http import Http404
 from django.template.defaultfilters import slugify
+=======
+import calendar
+from django.template import Context, loader
+from .models import Recipe, Event
+from datetime import timedelta, date
+from .utils import Calendar
+from datetime import datetime
+from django.utils.safestring import mark_safe
+# from django.core.urlresolvers import reverses
+
+>>>>>>> joon
 
 # Create your views here.
 # def index(request):
@@ -32,6 +44,9 @@ def profile(request):
 		form = EditProfileForm(instance=request.user)
 		args = {'form': form}
 		return render(request, 'profile.html', args)
+
+def myAccount(request):
+    return render(request, "myAccount.html", {'title': 'myAccount'})
 
 def login(request):
 	return render(request, "em_website/Registration/login.html", {'title': 'Login'})
@@ -198,3 +213,59 @@ def view_recipe(request, recipe):
         request.session['curr'] = toShow
         request.session['fromAPI'] = fromAPI
         return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
+
+class CalendarView(generic.ListView):
+    model = Event
+    template_name = 'em_website/calendar.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # use today's date for the calendar
+        d = get_date(self.request.GET.get('month', None))
+
+        # Instantiate our calendar class with today's year and date
+        cal = Calendar(d.year, d.month)
+
+        # Call the formatmonth method, which returns our calendar as a table
+        html_cal = cal.formatmonth(withyear=True)
+        context['calendar'] = mark_safe(html_cal)
+
+        # For calling previous/next month
+        d = get_date(self.request.GET.get('month', None))
+        context['prev_month'] = prev_month(d)
+        context['next_month'] = next_month(d)
+
+        return context
+
+def prev_month(d):
+    first = d.replace(day=1)
+    prev_month = first - timedelta(days=1)
+    month = 'month=' + str(prev_month.year) + '-' + str(prev_month.month)
+    return month
+
+def next_month(d):
+    days_in_month = calendar.monthrange(d.year, d.month)[1]
+    last = d.replace(day=days_in_month)
+    next_month = last + timedelta(days=1)
+    month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
+    return month
+
+def get_date(req_day):
+    if req_day:
+        year, month = (int(x) for x in req_day.split('-'))
+        return date(year, month, day=1)
+    return datetime.today()
+
+def event(request, event_id=None):
+    instance = Event()
+    if event_id:
+        instance = get_object_or_404(Event, pk=event_id)
+    else:
+        instance = Event()
+    
+    form = EventForm(request.POST or None, instance=instance)
+    if request.POST and form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('em_calendar'))
+    return render(request, 'em_website/event.html', {'form': form})
