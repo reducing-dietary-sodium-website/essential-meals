@@ -198,4 +198,3 @@ def view_recipe(request, recipe):
         request.session['curr'] = toShow
         request.session['fromAPI'] = fromAPI
         return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
-
