@@ -2,8 +2,8 @@ from django.http import HttpResponse, HttpResponseRedirect, QueryDict, Http404
 # from events.forms import EventForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import NewTopicForm, EditProfileForm, NewRecipeForm
-from .models import Board, Topic, Post
+from .forms import NewTopicForm, EditProfileForm, NewRecipeForm, EventForm
+from .models import Board, Topic, Post, Event
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 from django.views import generic
@@ -19,6 +19,7 @@ from datetime import timedelta, date
 from .utils import Calendar
 from datetime import datetime
 from django.utils.safestring import mark_safe
+
 
 # Create your views here.
 # def index(request):
@@ -256,7 +257,7 @@ def event(request, event_id=None):
         instance = get_object_or_404(Event, pk=event_id)
     else:
         instance = Event()
-    
+
     form = EventForm(request.POST or None, instance=instance)
     if request.POST and form.is_valid():
         form.save()

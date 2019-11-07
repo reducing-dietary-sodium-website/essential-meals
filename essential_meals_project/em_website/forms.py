@@ -27,7 +27,7 @@ class NewRecipeForm(forms.ModelForm):
                     'number_of_portions',
                     'difficulty',
                     ]
-     
+
 class EditProfileForm(UserChangeForm):
 
 	class Meta:
