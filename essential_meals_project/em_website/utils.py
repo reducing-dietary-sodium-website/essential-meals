@@ -15,12 +15,13 @@ class Calendar(HTMLCalendar):
 		d = ''
 		for event in events_per_day:
 			d += f'<li> {event.title} </li>'
+			d += f'<li> {event.get_html_url} </li>'
 
 		if day != 0:
 			return f"<td><span class='date'>{day}</span><ul> {d} </ul></td>"
 		return '<td></td>'
 
-	# formats a week as a tr 
+	# formats a week as a tr
 	def formatweek(self, theweek, events):
 		week = ''
 		for d, weekday in theweek:
@@ -38,3 +39,4 @@ class Calendar(HTMLCalendar):
 		for week in self.monthdays2calendar(self.year, self.month):
 			cal += f'{self.formatweek(week, events)}\n'
 		return cal
+
