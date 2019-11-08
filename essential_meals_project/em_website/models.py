@@ -2,6 +2,7 @@
 from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import AbstractUser, User
+from django.urls import reverse
 
 # class User(AbstractUser):
 #     numOfPatrons = models.IntegerField(default=1)
@@ -108,5 +109,5 @@ class Event(models.Model):
 
     @property
     def get_html_url(self):
-        url = reverse('em_website:event_edit', args=(self.id,))
+        url = reverse('event_edit', args=(self.id,))
         return f'<a href="{url}"> {self.title} </a>'
