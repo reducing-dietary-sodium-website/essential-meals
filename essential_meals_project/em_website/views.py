@@ -2,21 +2,25 @@ from django.http import HttpResponse, HttpResponseRedirect, QueryDict, Http404
 # from events.forms import EventForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import NewTopicForm, EditProfileForm
-from .models import Board, Topic, Post
+from .forms import NewTopicForm, EditProfileForm, NewRecipeForm, EventForm
+from .models import Board, Topic, Post, Event
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 from django.views import generic
 import requests
 import json
-import calendar
+import datetime
 from django.template import Context, loader
-from .models import Recipe, Event
+from .models import Recipe, SavedRecipe, Event
+from django.http import Http404
+from django.template.defaultfilters import slugify
+import calendar
 from datetime import timedelta, date
 from .utils import Calendar
 from datetime import datetime
 from django.utils.safestring import mark_safe
-# from django.core.urlresolvers import reverses
+from django.urls import reverse
+
 
 
 # Create your views here.
@@ -63,8 +67,8 @@ def register(request):
     return render(request, "Registration/registration.html", {'title': 'Register'})
 
 def home(request):
-	boards = Board.objects.all()
-	return render(request, "home.html", {'boards': boards})
+	saved_recipes = SavedRecipe.objects.filter(user=request.user.username)
+	return render(request, "home.html", {'saved_recipes': saved_recipes})
 
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
@@ -85,6 +89,25 @@ def new_topic(request, pk):
         form = NewTopicForm()
     return render(request, 'new_topic.html', {'board': board, 'form': form})
 
+def new_recipe(request):
+     if request.method == 'POST':
+         form = NewRecipeForm(request.POST)
+         if form.is_valid():
+             Recipe.objects.create(
+                 title = form.cleaned_data.get('title'),
+                 slug = slugify(form.cleaned_data.get('title')+ datetime.datetime.now().strftime('%H%M%S'))  ,
+                 ingredients= form.cleaned_data.get('ingredients'),
+                 preparation= form.cleaned_data.get('preparation'),
+                 time_for_preparation= form.cleaned_data.get('time_for_preparation'),
+                 number_of_portions= form.cleaned_data.get('number_of_portions'),
+                 difficulty = form.cleaned_data.get('difficulty'),
+                 author = request.user
+             )
+             return redirect("../recipes")
+     else:
+         form = NewRecipeForm()
+     return render(request, 'new_recipe.html',{'form': form   })
+
 def board_topics(request, pk):
     board = Board.objects.get(pk=pk)
     return render(request, 'topics.html', {'board': board})
@@ -93,23 +116,16 @@ def topic_posts(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
     return render(request, 'topic_posts.html', {'topic': topic})
 
-def index2(request,pk):
-    recipes = Recipe.objects.all()
-    t = loader.get_template('/index2.html')
-    c = Context({'object_list': recipes})
-    return HttpResponse(t.render(c))
+def index2(request):
+    queryset = Recipe.objects.all()
+    context = {
+        "object_list": queryset
+    }
+    return render(request,'index2.html',context)
 
 def detail(request,slug):
     recipe = get_object_or_404(Recipe,slug = slug)
     return render(request,'detail.html',{'object':recipe})
-    #recipe = get_object_or_404(Recipe,board_pk = pk,pk = recipes_pk )
-    # try:
-    #     recipe = Recipe.objects.get(slug=slug)
-    # except Recipe.DoesNotExist:
-    #     raise Http404
-    # t = loader.get_template('/detail.html')
-    # c = Context({'object': recipe})
-    # return HttpResponse(t.render(c))
 
 def search(request):
     return render(request, "search.html", {'title': 'Search'})
@@ -158,28 +174,41 @@ def results(request):
         'recipes': lists})
 
 def view_recipe(request, recipe):
-    # recipes = Recipe.objects.filter
-    fromAPI = recipe.isnumeric()
-    if fromAPI:
-        apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
-        result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
-        result = result.format(recipe, apiKey)
-        response1 = requests.get(result)
-        print(response1.json())
-        toShow = {}
-        toShow['title'] = response1.json()['title']
-        toShow['number_of_servings'] = response1.json()['servings']
-        ingredients = ''
-        for ingredient in response1.json()['extendedIngredients']:
-            ingredients += ingredient['original'] + '\n'
-        toShow['ingredients'] = ingredients
-        toShow['preparation'] = response1.json()['instructions']
-        toShow['author'] = response1.json()['sourceName']
-        toShow['source'] = response1.json()['sourceUrl']
+    if request.method == 'POST':
+        print("SAVING RECIPE")
+        SavedRecipe.objects.create(
+            name = request.session['name'],
+            user = request.session['user'],
+            slug = request.session['slug']
+        )
+        return render(request, "custom_recipe.html", {'recipe' : request.session['curr'], 'fromAPI' : request.session['fromAPI']})
+    else:
+        fromAPI = recipe.isnumeric()
+        if fromAPI:
+            apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
+            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
+            result = result.format(recipe, apiKey)
+            response1 = requests.get(result)
+            print(response1.json())
+            toShow = {}
+            toShow['title'] = response1.json()['title']
+            toShow['number_of_servings'] = response1.json()['servings']
+            ingredients = ''
+            for ingredient in response1.json()['extendedIngredients']:
+                ingredients += ingredient['original'] + '\n'
+            toShow['ingredients'] = ingredients
+            toShow['preparation'] = response1.json()['instructions']
+            toShow['author'] = response1.json()['sourceName']
+            toShow['source'] = response1.json()['sourceUrl']
 
-    if not fromAPI:
-        toShow = Recipe.objects.get(slug=recipe)
-    return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
+        if not fromAPI:
+            toShow = Recipe.objects.get(slug=recipe)
+        request.session['user'] = request.user.username
+        request.session['name'] = toShow['title']
+        request.session['slug'] = recipe
+        request.session['curr'] = toShow
+        request.session['fromAPI'] = fromAPI
+        return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
 
 class CalendarView(generic.ListView):
     model = Event
@@ -230,7 +259,7 @@ def event(request, event_id=None):
         instance = get_object_or_404(Event, pk=event_id)
     else:
         instance = Event()
-    
+
     form = EventForm(request.POST or None, instance=instance)
     if request.POST and form.is_valid():
         form.save()

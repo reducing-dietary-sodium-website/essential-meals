@@ -39,37 +39,36 @@
                     width: 1200px;
                     margin: 0 auto;
                 }
+                .recipe_list {
+                    padding: 12px;
+                    list-style-type: none;
+                    background-color: rgb(255, 255, 255);
+                }
+                .recipe_list:hover {
+                    padding: 12px;
+                    background-color: #D0D0D0;
+                    text-decoration: none;
+                }
+                a:hover, a:link, a:visited {
+                    text-decoration: none;
+                }
             </style>
         </head>
         <body>
             <p></p>
             <div class="home_Container">
                 <h3>Welcome, {{ user.username }}!</h3>
-                <table class="table">
-                    <thead class="thead-inverse">
-                    <tr>
-                        <th>Board</th>
-                        <th>Posts</th>
-                        <th>Topics</th>
-                        <th>Last Post</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for board in boards %}
-                        <tr>
-                        <td>
-                            <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
-                            <small class="text-muted d-block">{{ board.description }}</small>
-                        </td>
-                        <td class="align-middle">0</td>
-                        <td class="align-middle">0</td>
-                        <td></td>
-                        </tr>
+                <p><a href = "http://localhost:8000/em_website/recipes/">All Custom Recipes</a></p>
+                <h3>Saved Recipes</h3>
+                <ul>
+                    {% for recipe in saved_recipes %}
+                        <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list">
+                            <img src="" height=100dp width=100dp> {{ recipe.name }} </li></a>
                     {% endfor %}
-                    </tbody>
-                </table>
+                </ul>
             </div>
         </body>
+       
     </html>
     
 {% else %}

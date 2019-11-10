@@ -3,7 +3,8 @@ from django.urls import path, include
 from django.urls import re_path
 from django.conf.urls import url
 
-from . import views
+from em_website import views
+
 
 urlpatterns = [
     path('', views.home, name='em_home'),
@@ -19,13 +20,18 @@ urlpatterns = [
     path('search/', views.search, name='em_search'),
     path('results/', views.results, name='em_results'),
     path('view_recipe/<slug:recipe>/', views.view_recipe, name='em_view_recipe'),
-    re_path('boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
-    re_path('boards/(?P<pk>\d+)/new$', views.new_topic, name='new_topic'),
+    path('view_recipe/<slug:recipe>/post', views.view_recipe, name='em_view_recipe'),
+
     #path('recipes/',views.detail,name = 'detail'),
     re_path(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
     #re_path(r'boards/(?P<pk>\d+)/category/(?P<slug>\d+)/details$',views.detail, name = 'detail'),
     #re_path('boards/(?P<slug>\d+)/category/recipes$',views.index2, name = 'index2'),
+
     re_path(r'^recipes/(?P<slug>[-\w]+)/$',views.detail, name = 'details'),
-    # path('calendar/', views.CalendarView.as_view(), name='em_calendar'),
-    url(r'^calendar/$', views.CalendarView.as_view(), name='em_calendar')
+
+    re_path(r'^recipes/new', views.new_recipe, name = 'new_recipe'),
+    re_path(r'^recipes', views.index2, name = 'index2'),
+    path('calendar/', views.CalendarView.as_view(), name='em_calendar'),
+    url('event/new/$', views.event, name='event_new'),
+    url('event/edit/(?P<event_id>\d+)/$', views.event, name='event_edit')
 ]

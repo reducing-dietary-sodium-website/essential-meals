@@ -76,22 +76,38 @@
         a:hover, a:link, a:visited {
             text-decoration: none;
         }
+        .search_Container {
+            padding: 16px;
+            width: 1000px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
 <body>
     {% if user.is_authenticated %}
-        <div class="search_results_Container">
-            <h3>Search Results</h3>
-            <ul>
-                {% for recipe in custom_recipes %}
-                    <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list"> <img src="" height=100dp width=100dp> {{ recipe.title }} </li></a>
-                {% endfor %}
-                {% for key, value in recipes.items %}
-                    <a class="recipe" href ="{% url 'em_view_recipe' value.0 %}"><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
-                {% endfor %}
-            </ul>
-        </div>
+        <div class="search_Container">
+            <h3>Search for a recipe</h3>
+
+            <div class="container">
+            <form action="{% url 'em_results' %}">
+                <input type="text" name="search">
+                <button class="search_Btn">Search</button>
+                <p>Sodium Limit Per Serving (mg): <input type="number" name="sodium"></p>
+                <p>Gluten Free: <input type="checkbox" name="gluten">
+                Vegetarian:  <input type="checkbox" name="vegetarian"></p>
+            </form>
+            </div>
+        <h3>Search Results</h3>
+        <ul>
+            {% for recipe in custom_recipes %}
+                <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list"> <img src="" height=100dp width=100dp> {{ recipe.title }} </li></a>
+            {% endfor %}
+            {% for key, value in recipes.items %}
+                <a class="recipe" href ="{% url 'em_view_recipe' value.0 %}"><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
+            {% endfor %}
+        </ul>
+    </div>
     {% else %}
         <h3>You are not logged in</h3>
         <p>Click <a href="{% url 'login' %}">here</a> to login.</p>

@@ -2,6 +2,7 @@
 from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import AbstractUser, User
+from django.urls import reverse
 
 # class User(AbstractUser):
 #     numOfPatrons = models.IntegerField(default=1)
@@ -56,12 +57,12 @@ class Recipe(models.Model):
     )
     title = models.CharField(u'Title', max_length=255)
     slug = models.SlugField(unique=True)
-    ingredients = models.TextField(u'Indigrents',
+    ingredients = models.TextField(u'Ingredients',
         help_text=u'One ingredient per line')
     preparation = models.TextField(u'Preparation')
     time_for_preparation = models.IntegerField(u'Preparation time',
-        help_text=u'Zeit in Minuten angeben', blank=True, null=True)
-    number_of_portions = models.PositiveIntegerField(u'Number of portions')
+        help_text=u'How many minutes will it take?', blank=True, null=True,default = 15)
+    number_of_portions = models.PositiveIntegerField(u'Number of portions',default = 1)
     difficulty = models.SmallIntegerField(u'Difficulty',
         choices=DIFFICULTIES, default=DIFFICULTY_MEDIUM)
     category = models.ManyToManyField(Category, verbose_name=u'Categories')
@@ -83,8 +84,31 @@ class Recipe(models.Model):
         self.date_updated = now()
         super(Recipe, self).save(*args, **kwargs)
 
+
+class SavedRecipe(models.Model):
+    """
+    A model class describing a saved recipe.
+    """
+    name = models.CharField(u'Name', max_length=100)
+    user = models.CharField(u'User', max_length=100)
+    slug = models.SlugField(unique=False)
+
+    class Meta:
+        verbose_name = u'Saved Recipe'
+        verbose_name_plural = u'Saved Recipes'
+        ordering = ['name', 'user']
+
+    def __unicode__(self):
+        return self.name
+
 class Event(models.Model):
+
     title = models.CharField(max_length=200)
     description = models.TextField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
+    @property
+    def get_html_url(self):
+        url = reverse('event_edit', args=(self.id,))
+        return f'<a href="{url}"> {self.title} </a>'
