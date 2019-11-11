@@ -2,7 +2,7 @@ from django import forms
 from .models import Topic
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
-from .models import Recipe
+from .models import Recipe, SavedRecipe
 from django.forms import ModelForm, DateInput
 from em_website.models import Event
 
@@ -49,8 +49,10 @@ class EventForm(ModelForm):
     }
     fields = '__all__'
 
-  def __init__(self, *args, **kwargs):
+  def __init__(self, user, *args, **kwargs):
     super(EventForm, self).__init__(*args, **kwargs)
+    recipes = [(recipe, recipe) for recipe in SavedRecipe.objects.filter(user=user).values_list('name', flat=True).distinct()]
+    self.fields['recipe'] = forms.ChoiceField(choices=recipes)
     # input_formats to parse HTML5 datetime-local input to datetime field
     self.fields['start_time'].input_formats = ('%Y-%m-%dT%H:%M',)
     self.fields['end_time'].input_formats = ('%Y-%m-%dT%H:%M',)

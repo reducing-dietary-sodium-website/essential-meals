@@ -67,7 +67,7 @@ def register(request):
     return render(request, "Registration/registration.html", {'title': 'Register'})
 
 def home(request):
-	saved_recipes = SavedRecipe.objects.filter(user=request.user.username)
+	saved_recipes = SavedRecipe.objects.filter(user=request.user.username).distinct()
 	return render(request, "home.html", {'saved_recipes': saved_recipes})
 
 def new_topic(request, pk):
@@ -260,7 +260,7 @@ def event(request, event_id=None):
     else:
         instance = Event()
 
-    form = EventForm(request.POST or None, instance=instance)
+    form = EventForm(request.user.username, request.POST or None, instance=instance)
     if request.POST and form.is_valid():
         form.save()
         return HttpResponseRedirect(reverse('em_calendar'))
