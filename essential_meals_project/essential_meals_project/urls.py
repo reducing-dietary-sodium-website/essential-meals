@@ -14,15 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-<<<<<<< HEAD
-from django.urls import path, include
-||||||| merged common ancestors
-from django.urls import path
-from django.urls import include
-=======
 from django.urls import path, include
 from django.urls import include
->>>>>>> 432fa91b7e53c7beff3b8e984bc041817ac18b10
 from django.views.generic.base import TemplateView
 
 

@@ -1,12 +1,5 @@
-<<<<<<< HEAD
-from django.http import HttpResponse, QueryDict, Http404
-||||||| merged common ancestors
-from django.http import HttpResponse
-from django.http import QueryDict
-=======
 from django.http import HttpResponse, HttpResponseRedirect, QueryDict, Http404
 # from events.forms import EventForm
->>>>>>> 432fa91b7e53c7beff3b8e984bc041817ac18b10
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewTopicForm, EditProfileForm, NewRecipeForm
@@ -18,12 +11,6 @@ import requests
 import json
 import datetime
 from django.template import Context, loader
-<<<<<<< HEAD
-from .models import Recipe
-||||||| merged common ancestors
-from .models import Recipe
-from django.http import Http404
-=======
 from .models import Recipe, SavedRecipe, Event
 from django.http import Http404
 from django.template.defaultfilters import slugify
@@ -32,7 +19,6 @@ from datetime import timedelta, date
 from .utils import Calendar
 from datetime import datetime
 from django.utils.safestring import mark_safe
->>>>>>> 432fa91b7e53c7beff3b8e984bc041817ac18b10
 
 # Create your views here.
 # def index(request):
@@ -140,6 +126,9 @@ def detail(request,slug):
 
 def search(request):
     return render(request, "search.html", {'title': 'Search'})
+
+def analysis(request):
+    return render(request, "analysis.html", {'title': 'Analysis'})
 
 def results(request):
     querystr = request.META['QUERY_STRING']
