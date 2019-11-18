@@ -20,6 +20,8 @@ from .utils import Calendar
 from datetime import datetime
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+from django.core import serializers
+from django.forms.models import model_to_dict
 
 
 
@@ -95,12 +97,11 @@ def new_recipe(request):
          if form.is_valid():
              Recipe.objects.create(
                  title = form.cleaned_data.get('title'),
-                 slug = slugify(form.cleaned_data.get('title')+ datetime.datetime.now().strftime('%H%M%S'))  ,
+                 slug = slugify(form.cleaned_data.get('title')+ datetime.now().strftime('%H%M%S'))  ,
                  ingredients= form.cleaned_data.get('ingredients'),
                  preparation= form.cleaned_data.get('preparation'),
                  time_for_preparation= form.cleaned_data.get('time_for_preparation'),
                  number_of_portions= form.cleaned_data.get('number_of_portions'),
-                 difficulty = form.cleaned_data.get('difficulty'),
                  author = request.user
              )
              return redirect("../recipes")
@@ -133,24 +134,6 @@ def search(request):
 def results(request):
     querystr = request.META['QUERY_STRING']
     query = QueryDict(querystr)
-    # appID = 'd2952d1f'
-    # appKey = '9fda606325713a5d6aff3d0541d6c025'
-    # # with open('config.json', 'r') as fh:
-    # #     config = json.load(fh)
-    # #     appID = config['appID']
-    # #     appKey = config['appKEY']
-    # task = "https://api.edamam.com/search?q={}&app_id=${}&app_key=${}&from=0&to=10&calories=591-722&nutrients[NA]=0-{}"
-    # task = task.format(query['search'], appID, appKey, query['sodium'])
-    # if 'vegetarian' in query:
-    #     task = task + '&health=vegetarian'
-    # if 'gluten' is query:
-    #     task = task + '&health=gluten-free'
-    # response = requests.get(task)
-    # recipes = response.json()['hits']
-    # lists = {}
-    # for recipe in recipes:
-    #     recipe = recipe['recipe']
-    #     lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
     apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
     search = 'https://api.spoonacular.com/recipes/complexSearch?query={}&instructionsRequired=true&number=20&apiKey={}'
     search = search.format(query['search'], apiKey)
@@ -200,11 +183,15 @@ def view_recipe(request, recipe):
             toShow['preparation'] = response1.json()['instructions']
             toShow['author'] = response1.json()['sourceName']
             toShow['source'] = response1.json()['sourceUrl']
-
+            request.session['name'] = toShow['title']
         if not fromAPI:
-            toShow = Recipe.objects.get(slug=recipe)
+            results = Recipe.objects.filter(slug=recipe)
+            single = Recipe.objects.get(slug=recipe)
+            toShow = model_to_dict(single)
+            #toShow = serializers.serialize('json', results)[1:-1]
+            print(toShow)
+            request.session['name'] = toShow['title']
         request.session['user'] = request.user.username
-        request.session['name'] = toShow['title']
         request.session['slug'] = recipe
         request.session['curr'] = toShow
         request.session['fromAPI'] = fromAPI

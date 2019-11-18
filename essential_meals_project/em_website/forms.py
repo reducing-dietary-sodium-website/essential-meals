@@ -25,7 +25,6 @@ class NewRecipeForm(forms.ModelForm):
                     'preparation',
                     'time_for_preparation',
                     'number_of_portions',
-                    'difficulty',
                     ]
 
 class EditProfileForm(UserChangeForm):
@@ -44,8 +43,7 @@ class EventForm(ModelForm):
     model = Event
     # datetime-local is a HTML5 input type, format to make date time show on fields
     widgets = {
-      'start_time': DateInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
-      'end_time': DateInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
+      'start_time': DateInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%d'),
     }
     fields = '__all__'
 
@@ -54,5 +52,4 @@ class EventForm(ModelForm):
     recipes = [(recipe, recipe) for recipe in SavedRecipe.objects.filter(user=user).values_list('name', flat=True).distinct()]
     self.fields['recipe'] = forms.ChoiceField(choices=recipes)
     # input_formats to parse HTML5 datetime-local input to datetime field
-    self.fields['start_time'].input_formats = ('%Y-%m-%dT%H:%M',)
-    self.fields['end_time'].input_formats = ('%Y-%m-%dT%H:%M',)
+    self.fields['start_time'].input_formats = ('%Y-%m-%d',)
