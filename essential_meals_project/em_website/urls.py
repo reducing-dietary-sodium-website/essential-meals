@@ -5,7 +5,6 @@ from django.conf.urls import url
 
 from em_website import views
 
-
 urlpatterns = [
     path('', views.home, name='em_home'),
     path('login/', views.login, name='em_login'),
@@ -32,6 +31,5 @@ urlpatterns = [
     re_path(r'^recipes/new', views.new_recipe, name = 'new_recipe'),
     re_path(r'^recipes', views.index2, name = 'index2'),
     path('calendar/', views.CalendarView.as_view(), name='em_calendar'),
-    url('event/new/$', views.event, name='event_new'),
-    url('event/edit/(?P<event_id>\d+)/$', views.event, name='event_edit')
+    path('analysis/', views.analysis, name='em_analysis'),
 ]

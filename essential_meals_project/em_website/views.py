@@ -130,6 +130,9 @@ def detail(request,slug):
 def search(request):
     return render(request, "search.html", {'title': 'Search'})
 
+def analysis(request):
+    return render(request, "analysis.html", {'title': 'Analysis'})
+
 def results(request):
     querystr = request.META['QUERY_STRING']
     query = QueryDict(querystr)
