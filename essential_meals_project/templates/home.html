@@ -12,14 +12,14 @@
         <a class="nav-link" href="{% url 'em_search' %}">Search</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Calendar</a>
+        <a class="nav-link" href="{% url 'em_calendar' %}">Calendar</a>
     </li>
 {% endblock %}
 
 
 {% block Hamburger_Menu_Content %}
     {% if user.is_authenticated %}
-        <a class="dropdown-item" href="#">My Account</a>
+        <a class="dropdown-item" href="{% url 'em_myAccount' %}">My Account</a>
         <a class="dropdown-item" href="{% url 'em_profile' %}">Edit Account</a>
         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
     {% else %}
@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}    
+{% if user.is_authenticated %}
     <!DOCTYPE html>
     <html>
         <head>
@@ -39,37 +39,36 @@
                     width: 1200px;
                     margin: 0 auto;
                 }
+                .recipe_list {
+                    padding: 12px;
+                    list-style-type: none;
+                    background-color: rgb(255, 255, 255);
+                }
+                .recipe_list:hover {
+                    padding: 12px;
+                    background-color: #D0D0D0;
+                    text-decoration: none;
+                }
+                a:hover, a:link, a:visited {
+                    text-decoration: none;
+                }
             </style>
         </head>
         <body>
             <p></p>
             <div class="home_Container">
                 <h3>Welcome, {{ user.username }}!</h3>
-                <table class="table">
-                    <thead class="thead-inverse">
-                    <tr>
-                        <th>Board</th>
-                        <th>Posts</th>
-                        <th>Topics</th>
-                        <th>Last Post</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for board in boards %}
-                        <tr>
-                        <td>
-                            <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
-                            <small class="text-muted d-block">{{ board.description }}</small>
-                        </td>
-                        <td class="align-middle">0</td>
-                        <td class="align-middle">0</td>
-                        <td></td>
-                        </tr>
+                <p><a href = "http://localhost:8000/em_website/recipes/">All Custom Recipes</a></p>
+                <h3>Saved Recipes</h3>
+                <ul>
+                    {% for recipe in saved_recipes %}
+                        <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list">
+                            <img src="" height=100dp width=100dp> {{ recipe.name }} </li></a>
                     {% endfor %}
-                    </tbody>
-                </table>
+                </ul>
             </div>
         </body>
+       
     </html>
     
 {% else %}

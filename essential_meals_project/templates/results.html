@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    Essential Meals - Results
+{% endblock %}
+
 {% block navbar_Content %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'em_home' %}">Home</a>
@@ -14,7 +18,7 @@
 
 {% block Hamburger_Menu_Content %}
     {% if user.is_authenticated %}
-        <a class="dropdown-item" href="#">My Account</a>
+        <a class="dropdown-item" href="{% url 'em_myAccount' %}">My Account</a>
         <a class="dropdown-item" href="{% url 'em_profile' %}">Edit Account</a>
         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
     {% else %}
@@ -54,9 +58,11 @@
         button:hover {
             opacity: 0.8;
         }
-        .container {
-            padding: 16px;
-        }
+        .search_results_Container {
+			padding: 16px;
+			width: 1000px;
+			margin: 0 auto;
+		}
         .recipe_list {
             padding: 12px;
             list-style-type: none;
@@ -70,23 +76,38 @@
         a:hover, a:link, a:visited {
             text-decoration: none;
         }
+        .search_Container {
+            padding: 16px;
+            width: 1000px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
 <body>
     {% if user.is_authenticated %}
+        <div class="search_Container">
+            <h3>Search for a recipe</h3>
+
+            <div class="container">
+            <form action="{% url 'em_results' %}">
+                <input type="text" name="search">
+                <button class="search_Btn">Search</button>
+                <p>Sodium Limit Per Serving (mg): <input type="number" name="sodium"></p>
+                <p>Gluten Free: <input type="checkbox" name="gluten">
+                Vegetarian:  <input type="checkbox" name="vegetarian"></p>
+            </form>
+            </div>
         <h3>Search Results</h3>
-
-    <ul>
-        {% for recipe in custom_recipes %}
-            <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list"> <img src="" height=100dp width=100dp> {{ recipe.title }} </li></a>
-        {% endfor %}
-        {% for key, value in recipes.items %}
-            <a class="recipe" href ="{% url 'em_view_recipe' value.0 %}"><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
-        {% endfor %}
-    </ul>
-
-
+        <ul>
+            {% for recipe in custom_recipes %}
+                <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list"> <img src="" height=100dp width=100dp> {{ recipe.title }} </li></a>
+            {% endfor %}
+            {% for key, value in recipes.items %}
+                <a class="recipe" href ="{% url 'em_view_recipe' value.0 %}"><li class="recipe_list"> <img src={{ value.1 }} height=100dp width=100dp> {{ key }} </li></a>
+            {% endfor %}
+        </ul>
+    </div>
     {% else %}
         <h3>You are not logged in</h3>
         <p>Click <a href="{% url 'login' %}">here</a> to login.</p>

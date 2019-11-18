@@ -103,14 +103,20 @@
     <body>
         <div class="signup_Container">
             <h2>Sign up</h2>
+            <!-- <ul>
+                <li>
+
+                </li>
+            </ul> -->
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" style="border-radius: 15px;">Sign up</button>
+                <form action="{% url 'login' %}">
+                    <button style="border-radius: 15px; background-color: rgb(185, 178, 178);">Cancel</button>
+                </form>
             </form>
-            <form action="{% url 'login' %}">
-                <button type="submit" style="border-radius: 15px; background-color: rgb(185, 178, 178);">Cancel</button>
-            </form>
+            
         </div>
     </body>
 
