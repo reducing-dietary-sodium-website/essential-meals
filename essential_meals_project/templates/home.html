@@ -58,12 +58,15 @@
             <p></p>
             <div class="home_Container">
                 <h3>Welcome, {{ user.username }}!</h3>
-                <p><a href = "http://localhost:8000/em_website/recipes/">All Custom Recipes</a></p>
+                <p></p>
+                <div class="mb-4">
+                    <a href="{% url 'new_recipe'  %}" class="btn btn-primary">Create a new recipe</a>
+                </div>
                 <h3>Saved Recipes</h3>
                 <ul>
                     {% for recipe in saved_recipes %}
                         <a class="recipe" href ="{% url 'em_view_recipe' recipe.slug %}"><li class="recipe_list">
-                            <img src="" height=100dp width=100dp> {{ recipe.name }} </li></a>
+                            {{ recipe.name }} </li></a>
                     {% endfor %}
                 </ul>
             </div>
