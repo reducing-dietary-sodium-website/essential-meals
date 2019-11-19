@@ -95,9 +95,10 @@ class Event(models.Model):
     recipe = models.CharField(max_length=200)
     slug = models.CharField(u'Link', max_length=100, null=True)
     start_time = models.DateField()
-    user = models.CharField(u'User', max_length=100, null=True)
+    user = models.CharField(u'Calendar', max_length=100, null=True)
 
     @property
     def get_html_url(self):
-        url = reverse('event_edit', args=(self.id,))
+        print(self.slug)
+        url = reverse('em_view_recipe', args=(self.slug,))
         return f'<a href="{url}"> {self.recipe} </a>'

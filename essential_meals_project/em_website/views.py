@@ -22,6 +22,7 @@ from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.core import serializers
 from django.forms.models import model_to_dict
+import ast
 
 
 
@@ -143,7 +144,9 @@ def results(request):
         search = search + '&diet=gluten-free'
     if query['sodium'] != '':
         search = search + '&maxSodium=' + query['sodium']
+    print('before response')
     response1 = requests.get(search)
+    print('after response')
     lists = {}
     for recipe in response1.json()['results']:
         print(recipe)
@@ -249,6 +252,12 @@ def event(request, event_id=None):
 
     form = EventForm(request.user.username, request.POST or None, instance=instance)
     if request.POST and form.is_valid():
-        form.save()
+        meal = form.save(commit=False)
+        print('RECIPE', request.POST['recipe'], type(request.POST['recipe']))
+        rec = ast.literal_eval(request.POST['recipe'])
+        meal.user = request.user.username
+        meal.slug = rec[0]
+        meal.recipe = rec[1]
+        meal.save()
         return HttpResponseRedirect(reverse('em_calendar'))
     return render(request, 'em_website/event.html', {'form': form})
