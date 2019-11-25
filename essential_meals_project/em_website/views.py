@@ -259,7 +259,7 @@ def event(request, event_id=None):
     else:
         instance = Event()
 
-    instance.set_recipes(user=request.user.username)
+    # instance.set_recipes(user=request.user.username)
     form = EventForm(request.POST or None, request.user.username, instance=instance)
     if request.POST and form.is_valid():
         meal = form.save(commit=False)
@@ -270,4 +270,4 @@ def event(request, event_id=None):
         meal.recipe = rec[1]
         meal.save()
         return HttpResponseRedirect(reverse('em_calendar'))
-    return render(request, 'em_website/event.html', {'form': form})
+    return render(request, "em_website/event.html", {'form': form})

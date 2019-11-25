@@ -54,6 +54,7 @@ class EventForm(ModelForm):
   def __init__(self, user, *args, **kwargs):
     super(EventForm, self).__init__(*args, **kwargs)
     recipes = [([recipe[0], recipe[1]], recipe[1]) for recipe in SavedRecipe.objects.filter(user=user).values_list('slug', 'name').distinct()]
+    print(recipes)
     self.fields['recipe'] = forms.ChoiceField(choices=recipes)
     # input_formats to parse HTML5 datetime-local input to datetime field
     self.fields['start_time'].input_formats = ('%Y-%m-%dT%H:%M',)
