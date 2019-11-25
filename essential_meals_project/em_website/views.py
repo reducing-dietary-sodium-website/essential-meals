@@ -20,6 +20,7 @@ from .utils import Calendar
 from datetime import datetime
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+from django import forms
 
 
 
@@ -186,13 +187,18 @@ def view_recipe(request, recipe):
         fromAPI = recipe.isnumeric()
         if fromAPI:
             apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
-            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
+            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=true&apiKey={}'
             result = result.format(recipe, apiKey)
             response1 = requests.get(result)
-            print(response1.json())
+            print(response1.json()['nutrition'])
             toShow = {}
             toShow['title'] = response1.json()['title']
             toShow['number_of_servings'] = response1.json()['servings']
+            for nutrient in response1.json()['nutrition']['nutrients']:
+                if nutrient['title'] == 'Calories':
+                    toShow['calories'] = str(int(nutrient['amount'])) + nutrient['unit']
+                if nutrient['title'] == 'Sodium':
+                    toShow['sodium'] = str(int(nutrient['amount'])) + nutrient['unit']
             ingredients = ''
             for ingredient in response1.json()['extendedIngredients']:
                 ingredients += ingredient['original'] + '\n'
@@ -253,6 +259,9 @@ def get_date(req_day):
         return date(year, month, day=1)
     return datetime.today()
 
+# def load_recipes(request):
+#     recipe_id
+
 def event(request, event_id=None):
     instance = Event()
     if event_id:
@@ -260,7 +269,8 @@ def event(request, event_id=None):
     else:
         instance = Event()
 
-    form = EventForm(request.POST or None, instance=instance)
+    instance.set_recipes(user=request.user.username)
+    form = EventForm(request.POST or None, request.user.username, instance=instance)
     if request.POST and form.is_valid():
         form.save()
         return HttpResponseRedirect(reverse('em_calendar'))
