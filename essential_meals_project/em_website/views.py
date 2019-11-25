@@ -172,16 +172,21 @@ def view_recipe(request, recipe):
         fromAPI = recipe.isnumeric()
         if fromAPI:
             apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
-            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
+            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=True&apiKey={}'
             result = result.format(recipe, apiKey)
             response1 = requests.get(result)
-            print(response1.json())
+
             toShow = {}
             toShow['title'] = response1.json()['title']
             toShow['number_of_servings'] = response1.json()['servings']
             ingredients = ''
             for ingredient in response1.json()['extendedIngredients']:
                 ingredients += ingredient['original'] + '\n'
+            for nutrient in response1.json()['nutrition']['nutrients']:
+                if nutrient['title'] == 'Calories':
+                    toShow['calories'] = str(int(nutrient['amount'])) + nutrient['unit']
+                if nutrient['title'] == 'Sodium':
+                    toShow['sodium'] = str(int(nutrient['amount'])) + nutrient['unit']
             toShow['ingredients'] = ingredients
             toShow['preparation'] = response1.json()['instructions']
             toShow['author'] = response1.json()['sourceName']
