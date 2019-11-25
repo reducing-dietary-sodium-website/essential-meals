@@ -3,6 +3,9 @@ from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import AbstractUser, User
 from django.urls import reverse
+from django import forms
+
+
 
 # class User(AbstractUser):
 #     numOfPatrons = models.IntegerField(default=1)
@@ -92,6 +95,27 @@ class SavedRecipe(models.Model):
 
 class Event(models.Model):
 
+
+#     # print(saved_recipes)
+#     title = models.CharField(max_length=2, choices=[])
+#     # meals = models.CharField(max_length=2)
+#     # description = models.TextField()
+#     start_time = models.DateTimeField()
+#     end_time = models.DateTimeField()
+
+#     @property
+#     def get_html_url(self):
+#         url = reverse('event_edit', args=(self.id,))
+#         return f'<a href="{url}"> {self.title} </a>'
+
+#     def set_recipes(self, user):
+#         saved_recipes = SavedRecipe.objects.filter(user=user)
+#         recipes = []
+#         for recipe in saved_recipes:
+#             recipes.append((recipe.name, recipe.name))
+#         self.title = models.CharField(max_length=2, choices=recipes)
+
+
     recipe = models.CharField(max_length=200)
     slug = models.CharField(u'Link', max_length=100, null=True)
     start_time = models.DateField()
@@ -102,3 +126,4 @@ class Event(models.Model):
         print(self.slug)
         url = reverse('em_view_recipe', args=(self.slug,))
         return f'<a href="{url}"> {self.recipe} </a>'
+
