@@ -205,6 +205,9 @@ def view_recipe(request, recipe):
         request.session['fromAPI'] = fromAPI
         return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
 
+def analysis(request):
+    return render(request, "analysis.html", {'title': 'Analysis'})
+
 class CalendarView(generic.ListView):
     model = Event
     template_name = 'em_website/calendar.html'
