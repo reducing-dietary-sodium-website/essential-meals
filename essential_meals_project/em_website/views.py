@@ -20,13 +20,10 @@ from .utils import Calendar
 from datetime import datetime
 from django.utils.safestring import mark_safe
 from django.urls import reverse
-<<<<<<< HEAD
 from django import forms
-=======
 from django.core import serializers
 from django.forms.models import model_to_dict
 import ast
->>>>>>> 9433bd7b5c2df865c115ccea6c83542370af0277
 
 
 
