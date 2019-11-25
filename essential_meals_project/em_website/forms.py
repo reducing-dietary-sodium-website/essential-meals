@@ -3,8 +3,9 @@ from .models import Topic
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 from .models import Recipe, SavedRecipe
-from django.forms import ModelForm, DateInput
+from django.forms import ModelForm, DateInput, ModelChoiceField
 from em_website.models import Event
+
 
 class NewTopicForm(forms.ModelForm):
     message = forms.CharField(
@@ -55,4 +56,10 @@ class EventForm(ModelForm):
     recipes = [([recipe[0], recipe[1]], recipe[1]) for recipe in SavedRecipe.objects.filter(user=user).values_list('slug', 'name').distinct()]
     self.fields['recipe'] = forms.ChoiceField(choices=recipes)
     # input_formats to parse HTML5 datetime-local input to datetime field
+<<<<<<< HEAD
     self.fields['start_time'].input_formats = ('%Y-%m-%dT%H:%M',)
+    self.fields['end_time'].input_formats = ('%Y-%m-%dT%H:%M',)
+    self.fields['meals'] = ModelChoiceField(queryset=SavedRecipe.objects.filter(user=user))
+=======
+    self.fields['start_time'].input_formats = ('%Y-%m-%dT%H:%M',)
+>>>>>>> 9433bd7b5c2df865c115ccea6c83542370af0277
