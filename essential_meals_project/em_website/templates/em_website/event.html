@@ -60,7 +60,7 @@
         </head>
         <body>
             <div class="clearfix">
-              <a class="btn btn-info left" href="{% url 'em_calendar' %}"> Calendar </a>
+              <a class="btn btn-info left" href="{% url 'em_calendar' %}">Back to Calendar </a>
             </div>
 
             <form method="post">
@@ -70,6 +70,8 @@
                 <tr><td colspan="2"><button type="submit" class="btn btn-info right"> Submit </button></td></tr>
               </table>
             </form>
+            <a href="google.com">View Recipe</a>
+            {{ recipes }}
         </body>
         </html>
     {% else %}

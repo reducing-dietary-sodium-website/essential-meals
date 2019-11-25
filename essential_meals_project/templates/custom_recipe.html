@@ -86,7 +86,7 @@
 				<div class="card">
 					<form action="" method="POST">
 						{% csrf_token %}
-					  	<button 
+					  	<button
 					    	type="submit"
 					      	name="save"
 					    	style="display:inline-block;"><span>&#xe081;</span> Save
@@ -111,9 +111,26 @@
 					<p>Created By {{ recipe.author }} </p>
 				</div>
 			</div>
+            <div class="column">
+                <div class="card">
+                <h4>Nutrition</h4>
+                    {% if fromAPI %}
+                        <p>
+                            Calories: {{ recipe.calories }}
+                            Sodium: {{ recipe.sodium }}
+                        </p>
+
+                    {% else %}
+                        <p>
+                            Calories: {{ recipe.calories }}
+                            Sodium: {{ recipe.sodium }}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
 		</div>
-		
-		
+
+
 	{% else %}
 	    <h3>You are not logged in</h3>
 	    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>

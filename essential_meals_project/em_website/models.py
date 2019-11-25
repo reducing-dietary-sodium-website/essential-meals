@@ -3,6 +3,9 @@ from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import AbstractUser, User
 from django.urls import reverse
+from django import forms
+
+
 
 # class User(AbstractUser):
 #     numOfPatrons = models.IntegerField(default=1)
@@ -47,14 +50,6 @@ class Recipe(models.Model):
     """
     A model describing a coobook recipe.
     """
-    DIFFICULTY_EASY = 1
-    DIFFICULTY_MEDIUM = 2
-    DIFFICULTY_HARD = 3
-    DIFFICULTIES = (
-        (DIFFICULTY_EASY, u'easy'),
-        (DIFFICULTY_MEDIUM, u'normal'),
-        (DIFFICULTY_HARD, u'hard'),
-    )
     title = models.CharField(u'Title', max_length=255)
     slug = models.SlugField(unique=True)
     ingredients = models.TextField(u'Ingredients',
@@ -63,9 +58,6 @@ class Recipe(models.Model):
     time_for_preparation = models.IntegerField(u'Preparation time',
         help_text=u'How many minutes will it take?', blank=True, null=True,default = 15)
     number_of_portions = models.PositiveIntegerField(u'Number of portions',default = 1)
-    difficulty = models.SmallIntegerField(u'Difficulty',
-        choices=DIFFICULTIES, default=DIFFICULTY_MEDIUM)
-    category = models.ManyToManyField(Category, verbose_name=u'Categories')
     author = models.ForeignKey(User,on_delete = models.CASCADE, verbose_name=u'Author')
     date_created = models.DateTimeField(editable=False)
     date_updated = models.DateTimeField(editable=False)
@@ -103,12 +95,35 @@ class SavedRecipe(models.Model):
 
 class Event(models.Model):
 
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+
+#     # print(saved_recipes)
+#     title = models.CharField(max_length=2, choices=[])
+#     # meals = models.CharField(max_length=2)
+#     # description = models.TextField()
+#     start_time = models.DateTimeField()
+#     end_time = models.DateTimeField()
+
+#     @property
+#     def get_html_url(self):
+#         url = reverse('event_edit', args=(self.id,))
+#         return f'<a href="{url}"> {self.title} </a>'
+
+#     def set_recipes(self, user):
+#         saved_recipes = SavedRecipe.objects.filter(user=user)
+#         recipes = []
+#         for recipe in saved_recipes:
+#             recipes.append((recipe.name, recipe.name))
+#         self.title = models.CharField(max_length=2, choices=recipes)
+
+
+    recipe = models.CharField(max_length=200)
+    slug = models.CharField(u'Link', max_length=100, null=True)
+    start_time = models.DateField()
+    user = models.CharField(u'Calendar', max_length=100, null=True)
 
     @property
     def get_html_url(self):
-        url = reverse('event_edit', args=(self.id,))
-        return f'<a href="{url}"> {self.title} </a>'
+        print(self.slug)
+        url = reverse('em_view_recipe', args=(self.slug,))
+        return f'<a href="{url}"> {self.recipe} </a>'
+

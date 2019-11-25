@@ -20,6 +20,13 @@ from .utils import Calendar
 from datetime import datetime
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+<<<<<<< HEAD
+from django import forms
+=======
+from django.core import serializers
+from django.forms.models import model_to_dict
+import ast
+>>>>>>> 9433bd7b5c2df865c115ccea6c83542370af0277
 
 
 
@@ -67,7 +74,7 @@ def register(request):
     return render(request, "Registration/registration.html", {'title': 'Register'})
 
 def home(request):
-	saved_recipes = SavedRecipe.objects.filter(user=request.user.username)
+	saved_recipes = SavedRecipe.objects.filter(user=request.user.username).distinct()
 	return render(request, "home.html", {'saved_recipes': saved_recipes})
 
 def new_topic(request, pk):
@@ -95,12 +102,11 @@ def new_recipe(request):
          if form.is_valid():
              Recipe.objects.create(
                  title = form.cleaned_data.get('title'),
-                 slug = slugify(form.cleaned_data.get('title')+ datetime.datetime.now().strftime('%H%M%S'))  ,
+                 slug = slugify(form.cleaned_data.get('title')+ datetime.now().strftime('%H%M%S'))  ,
                  ingredients= form.cleaned_data.get('ingredients'),
                  preparation= form.cleaned_data.get('preparation'),
                  time_for_preparation= form.cleaned_data.get('time_for_preparation'),
                  number_of_portions= form.cleaned_data.get('number_of_portions'),
-                 difficulty = form.cleaned_data.get('difficulty'),
                  author = request.user
              )
              return redirect("../recipes")
@@ -136,24 +142,6 @@ def analysis(request):
 def results(request):
     querystr = request.META['QUERY_STRING']
     query = QueryDict(querystr)
-    # appID = 'd2952d1f'
-    # appKey = '9fda606325713a5d6aff3d0541d6c025'
-    # # with open('config.json', 'r') as fh:
-    # #     config = json.load(fh)
-    # #     appID = config['appID']
-    # #     appKey = config['appKEY']
-    # task = "https://api.edamam.com/search?q={}&app_id=${}&app_key=${}&from=0&to=10&calories=591-722&nutrients[NA]=0-{}"
-    # task = task.format(query['search'], appID, appKey, query['sodium'])
-    # if 'vegetarian' in query:
-    #     task = task + '&health=vegetarian'
-    # if 'gluten' is query:
-    #     task = task + '&health=gluten-free'
-    # response = requests.get(task)
-    # recipes = response.json()['hits']
-    # lists = {}
-    # for recipe in recipes:
-    #     recipe = recipe['recipe']
-    #     lists[str(recipe['label'])] = (str(recipe['url']), recipe['image'])
     apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
     search = 'https://api.spoonacular.com/recipes/complexSearch?query={}&instructionsRequired=true&number=20&apiKey={}'
     search = search.format(query['search'], apiKey)
@@ -163,7 +151,9 @@ def results(request):
         search = search + '&diet=gluten-free'
     if query['sodium'] != '':
         search = search + '&maxSodium=' + query['sodium']
+    print('before response')
     response1 = requests.get(search)
+    print('after response')
     lists = {}
     for recipe in response1.json()['results']:
         print(recipe)
@@ -189,13 +179,18 @@ def view_recipe(request, recipe):
         fromAPI = recipe.isnumeric()
         if fromAPI:
             apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
-            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=false&apiKey={}'
+            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=true&apiKey={}'
             result = result.format(recipe, apiKey)
             response1 = requests.get(result)
-            print(response1.json())
+            print(response1.json()['nutrition'])
             toShow = {}
             toShow['title'] = response1.json()['title']
             toShow['number_of_servings'] = response1.json()['servings']
+            for nutrient in response1.json()['nutrition']['nutrients']:
+                if nutrient['title'] == 'Calories':
+                    toShow['calories'] = str(int(nutrient['amount'])) + nutrient['unit']
+                if nutrient['title'] == 'Sodium':
+                    toShow['sodium'] = str(int(nutrient['amount'])) + nutrient['unit']
             ingredients = ''
             for ingredient in response1.json()['extendedIngredients']:
                 ingredients += ingredient['original'] + '\n'
@@ -203,11 +198,15 @@ def view_recipe(request, recipe):
             toShow['preparation'] = response1.json()['instructions']
             toShow['author'] = response1.json()['sourceName']
             toShow['source'] = response1.json()['sourceUrl']
-
+            request.session['name'] = toShow['title']
         if not fromAPI:
-            toShow = Recipe.objects.get(slug=recipe)
+            results = Recipe.objects.filter(slug=recipe)
+            single = Recipe.objects.get(slug=recipe)
+            toShow = model_to_dict(single)
+            #toShow = serializers.serialize('json', results)[1:-1]
+            print(toShow)
+            request.session['name'] = toShow['title']
         request.session['user'] = request.user.username
-        request.session['name'] = toShow['title']
         request.session['slug'] = recipe
         request.session['curr'] = toShow
         request.session['fromAPI'] = fromAPI
@@ -256,6 +255,9 @@ def get_date(req_day):
         return date(year, month, day=1)
     return datetime.today()
 
+# def load_recipes(request):
+#     recipe_id
+
 def event(request, event_id=None):
     instance = Event()
     if event_id:
@@ -263,8 +265,15 @@ def event(request, event_id=None):
     else:
         instance = Event()
 
-    form = EventForm(request.POST or None, instance=instance)
+    instance.set_recipes(user=request.user.username)
+    form = EventForm(request.POST or None, request.user.username, instance=instance)
     if request.POST and form.is_valid():
-        form.save()
+        meal = form.save(commit=False)
+        print('RECIPE', request.POST['recipe'], type(request.POST['recipe']))
+        rec = ast.literal_eval(request.POST['recipe'])
+        meal.user = request.user.username
+        meal.slug = rec[0]
+        meal.recipe = rec[1]
+        meal.save()
         return HttpResponseRedirect(reverse('em_calendar'))
     return render(request, 'em_website/event.html', {'form': form})
