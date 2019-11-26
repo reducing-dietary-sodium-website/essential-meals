@@ -267,5 +267,8 @@ def event(request, event_id=None):
         meal.slug = rec[0]
         meal.recipe = rec[1]
         meal.save()
+        #update the nutritional information
+        print(request.POST['start_time'], 'TYPE:',  type(request.POST['start_time']))
+        curr_date = datetime.strptime(request.POST['start_time'], '%Y-%m-%dT%H:%M').date()
         return HttpResponseRedirect(reverse('em_calendar'))
     return render(request, 'em_website/event.html', {'form': form})
