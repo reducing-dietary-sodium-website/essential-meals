@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Essential Meals - Analysis
+{% endblock %}
+
+{% block navbar_Content %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'em_home' %}">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'em_search' %}">Search</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'em_calendar' %}">Calendar</a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'em_analysis' %}">Analysis</a>
+    </li>
+{% endblock %}
+
+
+{% block Hamburger_Menu_Content %}
+    {% if user.is_authenticated %}
+        <a class="dropdown-item" href="{% url 'em_myAccount' %}">My Account</a>
+        <a class="dropdown-item" href="{% url 'em_profile' %}">Edit Account</a>
+        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <a class="dropdown-item" href="{% url 'signup' %}">Sign up</a>
+        <a class="dropdown-item" href="{% url 'password_reset' %}">Forgot Password</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <style>
+                    .analysis_Container {
+                        padding: 16px;
+                        width: 1200px;
+                        margin: 0 auto;
+                    }
+                    .recipe_list {
+                        padding: 12px;
+                        list-style-type: none;
+                        background-color: rgb(255, 255, 255);
+                    }
+                    .recipe_list:hover {
+                        padding: 12px;
+                        background-color: #D0D0D0;
+                        text-decoration: none;
+                    }
+                    a:hover, a:link, a:visited {
+                        text-decoration: none;
+                    }
+                </style>
+            </head>
+            <body>
+                <p></p>
+                <h1>Nutrition Content for the Current Week</h1>
+                <div class="analysis_Container">
+                    {% if graph %}
+                        <div style="width:600;height:500">
+                        {{ graph|safe }}
+                        </div>
+                    {% else %}
+                        <p>No nutritional information to display. Please add recipes to this week.
+                    {% endif %}
+                </div>
+            </body>
+        
+        </html>
+    
+    {% else %}
+        <h3>You are not logged in</h3>
+        <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
+    {% endif %}
+{% endblock %}

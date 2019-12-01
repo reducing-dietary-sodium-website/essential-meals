@@ -11,19 +11,21 @@ import requests
 import json
 import datetime
 from django.template import Context, loader
-from .models import Recipe, SavedRecipe, Event
+from .models import Recipe, SavedRecipe, Event, WeekOfNutrients
 from django.http import Http404
 from django.template.defaultfilters import slugify
 import calendar
 from datetime import timedelta, date
 from .utils import Calendar
-from datetime import datetime
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django import forms
 from django.core import serializers
 from django.forms.models import model_to_dict
 import ast
+import plotly.express as px
+import plotly.offline as opy
+import plotly.graph_objs as go
 
 
 
@@ -99,7 +101,7 @@ def new_recipe(request):
          if form.is_valid():
              Recipe.objects.create(
                  title = form.cleaned_data.get('title'),
-                 slug = slugify(form.cleaned_data.get('title')+ datetime.now().strftime('%H%M%S'))  ,
+                 slug = slugify(form.cleaned_data.get('title')+ datetime.datetime.now().strftime('%H%M%S'))  ,
                  ingredients= form.cleaned_data.get('ingredients'),
                  preparation= form.cleaned_data.get('preparation'),
                  time_for_preparation= form.cleaned_data.get('time_for_preparation'),
@@ -173,10 +175,10 @@ def view_recipe(request, recipe):
         fromAPI = recipe.isnumeric()
         if fromAPI:
             apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
-            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=true&apiKey={}'
+            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=True&apiKey={}'
             result = result.format(recipe, apiKey)
             response1 = requests.get(result)
-            print(response1.json()['nutrition'])
+
             toShow = {}
             toShow['title'] = response1.json()['title']
             toShow['number_of_servings'] = response1.json()['servings']
@@ -188,11 +190,18 @@ def view_recipe(request, recipe):
             ingredients = ''
             for ingredient in response1.json()['extendedIngredients']:
                 ingredients += ingredient['original'] + '\n'
+            for nutrient in response1.json()['nutrition']['nutrients']:
+                if nutrient['title'] == 'Calories':
+                    toShow['calories'] = str(int(nutrient['amount'])) + nutrient['unit']
+                if nutrient['title'] == 'Sodium':
+                    toShow['sodium'] = str(int(nutrient['amount'])) + nutrient['unit']
             toShow['ingredients'] = ingredients
             toShow['preparation'] = response1.json()['instructions']
             toShow['author'] = response1.json()['sourceName']
             toShow['source'] = response1.json()['sourceUrl']
             request.session['name'] = toShow['title']
+            request.session['calories'] = toShow['calories']
+            request.session['sodium'] = toShow['sodium']
         if not fromAPI:
             results = Recipe.objects.filter(slug=recipe)
             single = Recipe.objects.get(slug=recipe)
@@ -205,6 +214,29 @@ def view_recipe(request, recipe):
         request.session['curr'] = toShow
         request.session['fromAPI'] = fromAPI
         return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
+
+class Analysis(generic.TemplateView):
+    template_name = 'analysis.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Analysis, self).get_context_data(**kwargs)
+        today = datetime.datetime.today()
+        curr_week = today - datetime.timedelta(days=today.weekday())
+        nutrients = WeekOfNutrients.objects.get(user=self.request.user.username, start_monday=curr_week)
+        x = [x for x in range(7)]
+        y = [nutrients.sodium_day1, nutrients.sodium_day2, nutrients.sodium_day3, nutrients.sodium_day4, nutrients.sodium_day5, nutrients.sodium_day6, nutrients.sodium_day7]
+        trace1 = go.Scatter(x=x, y=y, marker={'color': 'red', 'symbol': 104, 'size': 10},
+                            mode="lines",  name='1st Trace')
+
+        data=go.Data([trace1])
+        layout=go.Layout(title="Weekly Sodium", xaxis={'title':'Day (Starting with Monday)'}, yaxis={'title':'Sodium (mg)'})
+        figure=go.Figure(data=data,layout=layout)
+        div = opy.plot(figure, auto_open=False, output_type='div')
+
+        context['graph'] = div
+
+        return context
+
 
 class CalendarView(generic.ListView):
     model = Event
@@ -247,7 +279,7 @@ def get_date(req_day):
     if req_day:
         year, month = (int(x) for x in req_day.split('-'))
         return date(year, month, day=1)
-    return datetime.today()
+    return datetime.datetime.today()
 
 # def load_recipes(request):
 #     recipe_id
@@ -269,5 +301,60 @@ def event(request, event_id=None):
         meal.slug = rec[0]
         meal.recipe = rec[1]
         meal.save()
+        #update the nutritional information if the recipe is from the API
+        if meal.slug.isnumeric():
+            apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
+            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=True&apiKey={}'
+            result = result.format(rec[0], apiKey)
+            response1 = requests.get(result)
+            for nutrient in response1.json()['nutrition']['nutrients']:
+                if nutrient['title'] == 'Calories':
+                    calories = int(nutrient['amount'])
+                if nutrient['title'] == 'Sodium':
+                    sodium = int(nutrient['amount'])
+
+
+            print(request.POST['start_time'], 'TYPE:',  type(request.POST['start_time']))
+            curr_date = datetime.datetime.strptime(request.POST['start_time'], '%Y-%m-%dT%H:%M').date()
+            begin_week = curr_date - datetime.timedelta(days = curr_date.weekday())
+            try:
+                week = WeekOfNutrients.objects.get(user=request.user.username, start_monday=begin_week)
+            except WeekOfNutrients.DoesNotExist:
+                week = None
+            if week == None:
+                WeekOfNutrients.objects.create(
+                    user = request.user.username,
+                    start_monday = begin_week,
+                    end_sunday = begin_week + datetime.timedelta(days=6)
+                )
+                week = WeekOfNutrients.objects.get(user=request.user.username, start_monday=begin_week)
+
+            if week != None:    
+                day = curr_date.weekday()
+                if day == 0:
+                    week.sodium_day1 += sodium
+                    week.calories_day1 += calories
+                elif day == 1:
+                    week.sodium_day2 += sodium
+                    week.calories_day2 += calories
+                elif day == 2:
+                    week.sodium_day3 += sodium
+                    week.calories_day3 += calories
+                elif day == 3:
+                    week.sodium_day4 += sodium
+                    week.calories_day4 += calories
+                elif day == 4:
+                    week.sodium_day5 += sodium
+                    week.calories_day5 += calories
+                elif day == 5:
+                    week.sodium_day6 += sodium
+                    week.calories_day6 += calories
+                elif day == 6:
+                    week.sodium_day7 += sodium
+                    week.calories_day7 += calories
+                
+                week.save()
+            
+            #TODO: Finish adding nutrition information
         return HttpResponseRedirect(reverse('em_calendar'))
     return render(request, "em_website/event.html", {'form': form})

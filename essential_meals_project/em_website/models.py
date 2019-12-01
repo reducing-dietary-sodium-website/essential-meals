@@ -127,3 +127,21 @@ class Event(models.Model):
         url = reverse('em_view_recipe', args=(self.slug,))
         return f'<a href="{url}"> {self.recipe} </a>'
 
+class WeekOfNutrients(models.Model):
+    user = models.CharField(null = False, max_length=100)
+    start_monday = models.DateField()
+    end_sunday = models.DateField()
+    sodium_day1 = models.PositiveIntegerField(u'Monday Sodium',default = 0)
+    sodium_day2 = models.PositiveIntegerField(u'Tuesday Sodium',default = 0)
+    sodium_day3 = models.PositiveIntegerField(u'Wednesday Sodium',default = 0)
+    sodium_day4 = models.PositiveIntegerField(u'Thursday Sodium',default = 0)
+    sodium_day5 = models.PositiveIntegerField(u'Friday Sodium',default = 0)
+    sodium_day6 = models.PositiveIntegerField(u'Saturday Sodium',default = 0)
+    sodium_day7 = models.PositiveIntegerField(u'Sunday Sodium',default = 0)
+    calories_day1 = models.PositiveIntegerField(u'Monday Calories',default = 0)
+    calories_day2 = models.PositiveIntegerField(u'Tuesday Calories',default = 0)
+    calories_day3 = models.PositiveIntegerField(u'Wednesday Calories',default = 0)
+    calories_day4 = models.PositiveIntegerField(u'Thursday Calories',default = 0)
+    calories_day5 = models.PositiveIntegerField(u'Friday Calories',default = 0)
+    calories_day6 = models.PositiveIntegerField(u'Saturday Calories',default = 0)
+    calories_day7 = models.PositiveIntegerField(u'Sunday Calories',default = 0)

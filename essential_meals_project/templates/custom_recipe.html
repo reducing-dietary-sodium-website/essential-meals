@@ -3,11 +3,14 @@
     <li class="nav-item">
         <a class="nav-link" href="{% url 'em_home' %}">Home</a>
     </li>
-    <li class="nav-item active">
+    <li class="nav-item">
         <a class="nav-link" href="{% url 'em_search' %}">Search</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Calendar</a>
+        <a class="nav-link" href="{% url 'em_calendar' %}">Calendar</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'em_analysis' %}">Analysis</a>
     </li>
 {% endblock %}
 
@@ -105,6 +108,19 @@
 					{% else %}
 					    <p>{{ recipe.preparation }}</p><p></p>
 					{% endif %}
+					<h4>Nutrition</h4>
+                    {% if fromAPI %}
+                        <p>
+                            Calories: {{ recipe.calories }}
+                            Sodium: {{ recipe.sodium }}
+                        </p>
+
+                    {% else %}
+                        <p>
+                            Nutritional information for this recipe has not been added
+                        </p>
+                    {% endif %}
+                
 					<p>Created By {{ recipe.author }} </p>
 				</div>
 			</div>

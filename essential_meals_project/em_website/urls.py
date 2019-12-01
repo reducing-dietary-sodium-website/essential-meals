@@ -32,5 +32,6 @@ urlpatterns = [
     re_path(r'^recipes', views.index2, name = 'index2'),
     path('calendar/', views.CalendarView.as_view(), name='em_calendar'),
     url('event/new/$', views.event, name='event_new'),
-    url('event/edit/(?P<event_id>\d+)/$', views.event, name='event_edit')
+    url('event/edit/(?P<event_id>\d+)/$', views.event, name='event_edit'),
+    path('analysis/', views.Analysis.as_view(), name='em_analysis'),
 ]
