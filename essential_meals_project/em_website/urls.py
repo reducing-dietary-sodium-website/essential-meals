@@ -33,5 +33,5 @@ urlpatterns = [
     path('calendar/', views.CalendarView.as_view(), name='em_calendar'),
     url('event/new/$', views.event, name='event_new'),
     url('event/edit/(?P<event_id>\d+)/$', views.event, name='event_edit'),
-    path('analysis/', views.analysis, name='em_analysis'),
+    path('analysis/', views.Analysis.as_view(), name='em_analysis'),
 ]

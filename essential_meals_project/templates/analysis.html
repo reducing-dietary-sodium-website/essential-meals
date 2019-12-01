@@ -59,9 +59,15 @@
             </head>
             <body>
                 <p></p>
-                <h1>This is analysis page.</h1>
+                <h1>Nutrition Content for the Current Week</h1>
                 <div class="analysis_Container">
-                    <!-- Put the graph here -->
+                    {% if graph %}
+                        <div style="width:600;height:500">
+                        {{ graph|safe }}
+                        </div>
+                    {% else %}
+                        <p>No nutritional information to display. Please add recipes to this week.
+                    {% endif %}
                 </div>
             </body>
         

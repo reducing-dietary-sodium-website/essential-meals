@@ -22,6 +22,9 @@ from django.urls import reverse
 from django.core import serializers
 from django.forms.models import model_to_dict
 import ast
+import plotly.express as px
+import plotly.offline as opy
+import plotly.graph_objs as go
 
 
 
@@ -206,8 +209,31 @@ def view_recipe(request, recipe):
         request.session['fromAPI'] = fromAPI
         return render(request, "custom_recipe.html", {'recipe' : toShow, 'fromAPI' : fromAPI})
 
-def analysis(request):
-    return render(request, "analysis.html", {'title': 'Analysis'})
+# def analysis(request):
+
+#     return render(request, "analysis.html", {'title': 'Analysis'})
+class Analysis(generic.TemplateView):
+    template_name = 'analysis.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Analysis, self).get_context_data(**kwargs)
+        today = datetime.datetime.today()
+        curr_week = today - datetime.timedelta(days=today.weekday())
+        nutrients = WeekOfNutrients.objects.get(user=self.request.user.username, start_monday=curr_week)
+        x = [x for x in range(7)]
+        y = [nutrients.sodium_day1, nutrients.sodium_day2, nutrients.sodium_day3, nutrients.sodium_day4, nutrients.sodium_day5, nutrients.sodium_day6, nutrients.sodium_day7]
+        trace1 = go.Scatter(x=x, y=y, marker={'color': 'red', 'symbol': 104, 'size': 10},
+                            mode="lines",  name='1st Trace')
+
+        data=go.Data([trace1])
+        layout=go.Layout(title="Weekly Sodium", xaxis={'title':'Day (Starting with Monday)'}, yaxis={'title':'Sodium (mg)'})
+        figure=go.Figure(data=data,layout=layout)
+        div = opy.plot(figure, auto_open=False, output_type='div')
+
+        context['graph'] = div
+
+        return context
+
 
 class CalendarView(generic.ListView):
     model = Event
@@ -292,7 +318,7 @@ def event(request, event_id=None):
                 WeekOfNutrients.objects.create(
                     user = request.user.username,
                     start_monday = begin_week,
-                    end_sunday = begin_week + datetime.timedelta(days = 6)
+                    end_sunday = begin_week + datetime.timedelta(days=6)
                 )
                 week = WeekOfNutrients.objects.get(user=request.user.username, start_monday=begin_week)
 
