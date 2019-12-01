@@ -11,13 +11,12 @@ import requests
 import json
 import datetime
 from django.template import Context, loader
-from .models import Recipe, SavedRecipe, Event
+from .models import Recipe, SavedRecipe, Event, WeekOfNutrients
 from django.http import Http404
 from django.template.defaultfilters import slugify
 import calendar
 from datetime import timedelta, date
 from .utils import Calendar
-from datetime import datetime
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.core import serializers
@@ -98,7 +97,7 @@ def new_recipe(request):
          if form.is_valid():
              Recipe.objects.create(
                  title = form.cleaned_data.get('title'),
-                 slug = slugify(form.cleaned_data.get('title')+ datetime.now().strftime('%H%M%S'))  ,
+                 slug = slugify(form.cleaned_data.get('title')+ datetime.datetime.now().strftime('%H%M%S'))  ,
                  ingredients= form.cleaned_data.get('ingredients'),
                  preparation= form.cleaned_data.get('preparation'),
                  time_for_preparation= form.cleaned_data.get('time_for_preparation'),
@@ -192,6 +191,8 @@ def view_recipe(request, recipe):
             toShow['author'] = response1.json()['sourceName']
             toShow['source'] = response1.json()['sourceUrl']
             request.session['name'] = toShow['title']
+            request.session['calories'] = toShow['calories']
+            request.session['sodium'] = toShow['sodium']
         if not fromAPI:
             results = Recipe.objects.filter(slug=recipe)
             single = Recipe.objects.get(slug=recipe)
@@ -249,7 +250,7 @@ def get_date(req_day):
     if req_day:
         year, month = (int(x) for x in req_day.split('-'))
         return date(year, month, day=1)
-    return datetime.today()
+    return datetime.datetime.today()
 
 def event(request, event_id=None):
     instance = Event()
@@ -267,8 +268,60 @@ def event(request, event_id=None):
         meal.slug = rec[0]
         meal.recipe = rec[1]
         meal.save()
-        #update the nutritional information
-        print(request.POST['start_time'], 'TYPE:',  type(request.POST['start_time']))
-        curr_date = datetime.strptime(request.POST['start_time'], '%Y-%m-%dT%H:%M').date()
+        #update the nutritional information if the recipe is from the API
+        if meal.slug.isnumeric():
+            apiKey = 'a4b86bb5aa9f429f95f5a4c850a8cfe4'
+            result = 'https://api.spoonacular.com/recipes/{}/information?includeNutrition=True&apiKey={}'
+            result = result.format(rec[0], apiKey)
+            response1 = requests.get(result)
+            for nutrient in response1.json()['nutrition']['nutrients']:
+                if nutrient['title'] == 'Calories':
+                    calories = int(nutrient['amount'])
+                if nutrient['title'] == 'Sodium':
+                    sodium = int(nutrient['amount'])
+
+
+            print(request.POST['start_time'], 'TYPE:',  type(request.POST['start_time']))
+            curr_date = datetime.datetime.strptime(request.POST['start_time'], '%Y-%m-%dT%H:%M').date()
+            begin_week = curr_date - datetime.timedelta(days = curr_date.weekday())
+            try:
+                week = WeekOfNutrients.objects.get(user=request.user.username, start_monday=begin_week)
+            except WeekOfNutrients.DoesNotExist:
+                week = None
+            if week == None:
+                WeekOfNutrients.objects.create(
+                    user = request.user.username,
+                    start_monday = begin_week,
+                    end_sunday = begin_week + datetime.timedelta(days = 6)
+                )
+                week = WeekOfNutrients.objects.get(user=request.user.username, start_monday=begin_week)
+
+            if week != None:    
+                day = curr_date.weekday()
+                if day == 0:
+                    week.sodium_day1 += sodium
+                    week.calories_day1 += calories
+                elif day == 1:
+                    week.sodium_day2 += sodium
+                    week.calories_day2 += calories
+                elif day == 2:
+                    week.sodium_day3 += sodium
+                    week.calories_day3 += calories
+                elif day == 3:
+                    week.sodium_day4 += sodium
+                    week.calories_day4 += calories
+                elif day == 4:
+                    week.sodium_day5 += sodium
+                    week.calories_day5 += calories
+                elif day == 5:
+                    week.sodium_day6 += sodium
+                    week.calories_day6 += calories
+                elif day == 6:
+                    week.sodium_day7 += sodium
+                    week.calories_day7 += calories
+                
+                week.save()
+            
+            #TODO: Finish adding nutrition information
         return HttpResponseRedirect(reverse('em_calendar'))
     return render(request, 'em_website/event.html', {'form': form})
