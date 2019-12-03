@@ -52,3 +52,22 @@ cd essential_meals_project
 python manage.py runserver
 ```
 The website can then be viewed by going to <localhost:8000/em_website>.
+
+### Troubleshooting
+
+* ```
+  package not installed
+  ```
+  Run 'pip install \<package name\>'
+
+* Database changes are not reflected on the website
+  ```
+  python manage.py makemigrations
+  python manage.py migrate
+  ```
+
+* "Database table is duplicated"
+
+  ```
+  python manage.py migrate --fake
+  ```
