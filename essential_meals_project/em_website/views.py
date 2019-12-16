@@ -219,18 +219,20 @@ class Analysis(generic.TemplateView):
         context = super(Analysis, self).get_context_data(**kwargs)
         today = datetime.datetime.today()
         curr_week = today - datetime.timedelta(days=today.weekday())
-        nutrients = WeekOfNutrients.objects.get(user=self.request.user.username, start_monday=curr_week)
-        x = [x for x in range(7)]
-        y = [nutrients.sodium_day1, nutrients.sodium_day2, nutrients.sodium_day3, nutrients.sodium_day4, nutrients.sodium_day5, nutrients.sodium_day6, nutrients.sodium_day7]
-        trace1 = go.Scatter(x=x, y=y, marker={'color': 'red', 'symbol': 104, 'size': 10},
-                            mode="lines",  name='1st Trace')
+        try:
+            nutrients = WeekOfNutrients.objects.get(user=self.request.user.username, start_monday=curr_week)
+            x = [x for x in range(7)]
+            y = [nutrients.sodium_day1, nutrients.sodium_day2, nutrients.sodium_day3, nutrients.sodium_day4, nutrients.sodium_day5, nutrients.sodium_day6, nutrients.sodium_day7]
+            trace1 = go.Scatter(x=x, y=y, marker={'color': 'red', 'symbol': 104, 'size': 10},
+                                mode="lines",  name='1st Trace')
 
-        data=go.Data([trace1])
-        layout=go.Layout(title="Weekly Sodium", xaxis={'title':'Day (Starting with Monday)'}, yaxis={'title':'Sodium (mg)'})
-        figure=go.Figure(data=data,layout=layout)
-        div = opy.plot(figure, auto_open=False, output_type='div')
-
-        context['graph'] = div
+            data=go.Data([trace1])
+            layout=go.Layout(title="Weekly Sodium", xaxis={'title':'Day (Starting with Monday)'}, yaxis={'title':'Sodium (mg)'})
+            figure=go.Figure(data=data,layout=layout)
+            div = opy.plot(figure, auto_open=False, output_type='div')
+            context['graph'] = div
+        except WeekOfNutrients.DoesNotExist:
+            context['graph'] = None
 
         return context
 
